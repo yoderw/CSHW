@@ -1,21 +1,18 @@
+from math import sqrt
+
 def sum_cubes(n):
 	total = 0
-	i = 1
-	while i <= n:
-		total += i ** 3
-		i += 1
+	for i in range(n):
+		total += (i + 1) ** 3
 	return total
 
 def is_prime(n):
-	if n == 1:
+	if n < 2:
 		return False
-	total = 0
-	i = 1
-	while i <= n:
+	for i in range(2, int(sqrt(n) + 1)):
 		if n % i == 0:
-			total += 1
-		i += 1
-	return total < 3
+			return False
+	return True
 
 def fib(n):
 	a, b = 0, 1
@@ -51,11 +48,38 @@ def collatz(n):
 		else:
 			i += 1
 
-def digit(x, n):
-	return 0 if (10 ** n) > x else (x % (10 ** (n + 1))) // (10 ** n)
-
-def reverse(n):
-	for i in range
-
 def numpal(n):
+
+	def digit(n, x):
+		return None if (10 ** x) > n else (n % (10 ** (x + 1))) // (10 ** x)
+
+	def int_len(n):
+		i = 0
+		while True:
+			if digit(n, i) is None:
+				return i
+			else:
+				i += 1
+
+	def reverse(n):
+		out = 0
+		for i in range(0, int_len(n)):
+			out += digit(n, i) * (10 ** ((int_len(n) - 1) - i))
+		return out
+
 	return n == reverse(n)
+
+def poly2max(x1, x2, y1, y2):
+	poly = lambda x, y: -x**4 + 3*x**2 - y**4 + 5*y**2
+	values = [poly(x, y) for x in range(x1, x2 + 1) for y in range(y1, y2 + 1)]
+	return max(values)
+
+def solve(a, b, c):
+	disc = b**2 - 4*a*c
+	if disc >= 0 and sqrt(disc) == int(sqrt(disc)):
+		x1 = (-b + sqrt(b**2 - 4*a*c)) / (2*a)
+		x2 = (-b - sqrt(b**2 - 4*a*c)) / (2*a)
+		if int(x1) == x1 and int(x2) == x2:
+			return int(max(x1, x2))
+	return False
+
