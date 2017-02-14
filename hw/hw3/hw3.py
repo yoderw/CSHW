@@ -74,6 +74,7 @@ def poly2max(x1, x2, y1, y2):
 	values = [poly(x, y) for x in range(x1, x2 + 1) for y in range(y1, y2 + 1)]
 	return max(values)
 
+"""
 def solve(a, b, c):
 	disc = b**2 - 4*a*c
 	if disc >= 0 and sqrt(disc) == int(sqrt(disc)):
@@ -82,4 +83,29 @@ def solve(a, b, c):
 		if int(x1) == x1 and int(x2) == x2:
 			return int(max(x1, x2))
 	return False
+"""
 
+def isqrt(n):
+    x = n
+    y = (x + 1) // 2
+    while y < x:
+        x = y
+        y = (x + n // x) // 2
+    return x
+
+def solve(a, b, c):
+	disc = b**2 - 4*a*c
+	div = 2*a
+	x1 = (-b + isqrt(disc))
+	x2 = (-b - isqrt(disc))
+	div_check = lambda x: True if x % div == 0 else False
+	if disc >=0:
+		print("1")
+		if sqrt(disc) == isqrt(disc):
+			print("2")
+			if div_check(x1):
+				print("3")
+				if div_check(x2):
+					print("4")
+					return max(x1 // div, x2 // div)
+	return False
