@@ -98,14 +98,12 @@ def solve(a, b, c):
 	div = 2*a
 	x1 = (-b + isqrt(disc))
 	x2 = (-b - isqrt(disc))
-	div_check = lambda x: True if x % div == 0 else False
-	if disc >=0:
-		print("1")
-		if sqrt(disc) == isqrt(disc):
-			print("2")
-			if div_check(x1):
-				print("3")
-				if div_check(x2):
-					print("4")
-					return max(x1 // div, x2 // div)
+	if disc >= 0:
+		if isqrt(disc) == sqrt(disc):
+			if not x1 % div and not x2 % div:
+				return max(x1 // div, x2 // div)
+			elif x1 % div and not x2 % div:
+				return x2 // div
+			elif not x1 % div and x2 % div:
+				return x1 // div
 	return False
