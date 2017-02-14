@@ -264,4 +264,36 @@ I will start with this basic functionality and iterate for later versions of the
 I think I can use the numpy module to do most, if not all, of the heavy lifting.
 """
 def myStrategy_mkI(myscore, theirscore, last):
-    pass
+
+    diff = 100 - myscore
+    mean = lambda n: 2.5 * n
+    stdev = lambda m: (2.91 * m) ** 1/2
+    range1 = lambda m, s: int(m - s), int(m + s)
+    range2 = lambda m, s: int(m - (2 * s)), int(m + (2 * s))
+    n_from_mean = lambda m: m / 2.5
+    range_dict = {mean(i) : [i, range1(i, stdev(mean(i))), range2(i, stdev(mean(i)))] for i in range(4, 14)}
+
+    if myscore == 0:
+        return 33
+    elif 90 <= myscore <= 97:
+        pass
+    else:
+        pass
+
+    print(range_dict)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
