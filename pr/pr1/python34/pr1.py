@@ -264,24 +264,38 @@ I will start with this basic functionality and iterate for later versions of the
 I think I can use the numpy module to do most, if not all, of the heavy lifting.
 """
 def myStrategy_mkI(myscore, theirscore, last):
+    from math import sqrt
 
     diff = 100 - myscore
     mean = lambda n: 2.5 * n
-    stdev = lambda m: (2.91 * m) ** 1/2
-    range1 = lambda m, s: int(m - s), int(m + s)
-    range2 = lambda m, s: int(m - (2 * s)), int(m + (2 * s))
+    stdev = lambda m: sqrt(2.91 * m)
+    range1 = lambda m, s: range(int(m - s), int(m + s) + 1)
+    range2 = lambda m, s: range(int(m - (2 * s)), int(m + (2 * s) + 1))
     n_from_mean = lambda m: m / 2.5
-    range_dict = {mean(i) : [i, range1(i, stdev(mean(i))), range2(i, stdev(mean(i)))] for i in range(4, 14)}
+    range_dict = {i : [range1(mean(i), stdev(mean(i))), range2(mean(i), stdev(mean(i)))] for i in range(4, 14)}
 
-    if myscore == 0:
-        return 33
-    elif 90 <= myscore <= 97:
-        pass
-    else:
-        pass
+    if myscore < 50:
+        return diff // 3
+    elif 50 < myscore:
+        contenders = []
+        for i in range_dict:
+            if diff in range_dict[i][0]:
+                contenders.append(i)
+        min_range = None
+        for i in contenders:
+            if min_range == None:
+                min_range = i
+            elif len(range_dict[i][0]) < len(range_dict[min_range][0]):
+                min_range = i
+        return 
 
-    print(range_dict)
-
+from math import sqrt
+mean = lambda n: 2.5 * n
+stdev = lambda m: sqrt(2.91 * m)
+range1 = lambda m, s: range(int(m - s), int(m + s) + 1)
+range2 = lambda m, s: range(int(m - (2 * s)), int(m + (2 * s) + 1))
+n_from_mean = lambda m: m / 2.5
+range_dict = {i : [range1(mean(i), stdev(mean(i))), range2(mean(i), stdev(mean(i)))] for i in range(4, 14)}
 
 
 
