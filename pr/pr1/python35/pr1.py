@@ -346,8 +346,9 @@ def myStrategy_template(myscore, theirscore, last):
 # first iteration of the above template
 def myStrategy_mkI(myscore, theirscore, last):
     # diff := the difference between 100 and myscore
-    # thresh1/2 := threshholds of point values at which the strategy will change tactics; mainly for sake of testing.
     diff = 100 - myscore
+
+    # thresh1/2/3 := threshholds of point values at which the strategy will change tactics; mainly for sake of testing.
     thresh1 = 50
     thresh2 = 80
     thresh3 = 97
@@ -356,9 +357,13 @@ def myStrategy_mkI(myscore, theirscore, last):
     global range_dict
 
     # range_sort(x, y, z) := given diff x and parameter y, sort dict z
-    def range_dict_sort(param, diff=diff, dict=range_dict):
+    # below is temp; proof of concept
+    def range_dict_sort(diff=diff, dict=range_dict):
+        contenders = []
         for i in dict:
-            if param(dict[i])
+            if diff in dict[i][1]:
+                contenders += i
+
 
     # below_threshx := the sub-function to be used when myscore <= threshx
     def below_thresh1(myscore, theirscore, last):
@@ -370,7 +375,10 @@ def myStrategy_mkI(myscore, theirscore, last):
     def below_thresh3(myscore, theirscore, last):
         pass
 
+    print(range_dict_sort())
+    
     # the basic control flow of the strategy:
+    """
     if diff <= thresh1:
         return below_thresh1(myscore, theirscore, last)
 
@@ -382,3 +390,4 @@ def myStrategy_mkI(myscore, theirscore, last):
 
     else:
         return 0
+    """
