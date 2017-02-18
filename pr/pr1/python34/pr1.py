@@ -344,8 +344,6 @@ a 95% chance of being w/in 2 SD of the mean
 and a 99.7% chance of being w/in 3 SD of the mean.
 Hopefully the range of these values will not be so great as to be impractical.
 I will start with this basic functionality and iterate for later versions of the function.
----
-I think I can use the numpy module to do most, if not all, of the heavy lifting.
 """
 
 from math import sqrt
@@ -367,10 +365,14 @@ range2 = lambda m, s: range(int(m - (2 * s)), int(m + (2 * s) + 1))
 d_from_mean = lambda m: m / 2.5
 
 # dict comp containing the ranges of 1 and 2 standard deviations from the mean as values,
-# and the number of associated dice as values, calculated using the above functions.
-range_dict = {i : [range1(mean(i), stdev(mean(i))), range2(mean(i), stdev(mean(i)))] for i in range(1, 15)}
+# and the associated number of dice as values, calculated using the above functions.
+range_dict_old = {i : [range1(mean(i), stdev(mean(i))), range2(mean(i), stdev(mean(i)))] for i in range(4, 20)}
 
-# below is the output of the dict compt with some augmented values
+# I calculated the standard deviation from the normal distribution using the above functions
+# and dictionary comprehension, only to copy the output and store it in the dictionary below.
+# I did this because a few of the values were off (eg. below 0)
+# my strategy will pull from the below dictionary to determine how many dice to roll on the second turn
+
 range_dict = {1: [range(0, 6), range(0, 8)],
               2: [range(1, 9), range(0, 13)],
               3: [range(2, 13), range(0, 17)],
@@ -384,7 +386,7 @@ range_dict = {1: [range(0, 6), range(0, 8)],
               11: [range(18, 37), range(9, 46)],
               12: [range(20, 40), range(11, 49)],
               13: [range(22, 43), range(13, 52)],
-              14: [range(24, 46), range(14, 56)]
+              14: [range(24, 46), range(14, 56)],
               }
 
 def range_dict_sort(diff, dict=range_dict):
@@ -550,68 +552,4 @@ def myStrategy_mkII(myscore, theirscore, last):
     else:
         return 0
 
-def myStrategy_mkIII(myscore, theirscore, last):
-    # diff := the difference between 100 and myscore
-    diff = 100 - myscore
-
-    # thresh1/2/3 := threshholds of point values at which the strategy will change tactics; mainly for sake of testing.
-    thresh1 = 60
-    thresh2 = 89
-    thresh3 = 96
-
-    # global is for testing purposes only
-    global range_dict
-
-    # below is temp; proof of concept
-    def range_dict_sort(diff=diff, dict=range_dict):
-        empty = lambda ls: True if len(ls) == 0 else False
-        aggr = []
-        safe = []
-        for i in dict:
-            if diff in dict[i][0]:
-                aggr.append(i)
-            elif diff in dict[i][1]:
-                safe.append(i)
-        return [x[0] for x in (aggr, safe) if not empty(x)]
-
-
-    # below_threshx := the sub-function to be used when myscore <= threshx
-    def below_thresh1(myscore, theirscore, last):
-        return diff // 3
-
-    def below_thresh2(myscore, theirscore, last):
-        if myscore < theirscore:
-            return range_dict_sort()[0]
-        elif myscore >= theirscore:
-            return range_dict_sort()[1]
-
-    def below_thresh3(myscore, theirscore, last):
-        return (diff // 6) + 1
-
-    def above_thresh3(myscore, theirscore, last):
-        if myscore >= theirscore:
-            return 0
-        if myscore < theirscore:
-            return 1
-
-    # the basic control flow of the strategy:
-    if myscore <= thresh1:
-        return below_thresh1(myscore, theirscore, last)
-    elif thresh1 < myscore <= thresh2:
-        return below_thresh2(myscore, theirscore, last)
-    elif thresh2 < myscore <= thresh3:
-        return below_thresh3(myscore, theirscore, last)
-    elif thresh3 < myscore:
-        return above_thresh3(myscore, theirscore, last)
-    else:
-        return 0
-
 test = lambda: pr1testing.testStrat(myStrategy, 10000)
-
-def big_data():
-    for i in range(80, 101):
-        for j in range(80, 101):
-            if myStrategy(i, j, 0) != std(i, j, 0):
-                print()
-                print("i:{} j{}".format(i, j))
-                print("myOut:{}, theirOut:{}".format(myStrategy(i,j,0), std(i,j,0)))
