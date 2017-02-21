@@ -25,20 +25,33 @@ def string_to_file(filename, s):
 # A working Caesar cipher
 #############################################################
 
-def simplify_string(s):
-    "your code here"
+def simplify_string(s): # can we do this more like a comprehension?
+    output = ""
+    for char in s:
+        upper = char.upper()
+        if upper in alpha:
+            output += upper
+    return output
 
 def num_to_let(x):
-    "your code here"
+    return alpha[x]
 
 def let_to_num(a):
-    "your code here"
+    return alpha.index(a.upper())
 
 def shift_char(char, shift):
-    "your code here"
+    char_index = let_to_num(char)
+    shift_index = let_to_num(shift)
+    out_index = char_index + shift_index
+    if out_index >= len(alpha):
+        out_index = len(alpha) - out_index
+    return alpha[out_index]
 
 def caesar_enc(plain, key):
-    "your code here"
+    cipher_text = ""
+    for char in plain:
+        cipher_text += shift_char(char, key)
+    return cipher_text
 
 def caesar_dec(cipher, key):
     "your code here"
