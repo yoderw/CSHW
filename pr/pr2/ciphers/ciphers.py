@@ -39,7 +39,7 @@ def num_to_let(x):
 def let_to_num(a):
     return alpha.index(a.upper())
 
-def shift_char(char, shift):
+def shift_char(char, shift): # need to fix wrap-around
     char_index = let_to_num(char)
     shift_index = let_to_num(shift)
     out_index = char_index + shift_index
