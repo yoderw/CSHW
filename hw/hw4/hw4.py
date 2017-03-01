@@ -8,3 +8,5 @@ def max_of_two(f, g, n):
 def max_of_funcs(f, g):
 	h = lambda x: max(f(x), g(x))
 	return h
+
+	
