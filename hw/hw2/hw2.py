@@ -30,3 +30,4 @@ def cheapest(n):
 	cost_a = trips_a * 200
 	cost_b = trips_b * 250
 	return (cost_a <= cost_b and 'Alice') or (cost_b < cost_a and 'Bob')
+	
