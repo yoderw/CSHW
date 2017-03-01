@@ -107,3 +107,4 @@ def solve(a, b, c):
 			elif not x1 % div and x2 % div:
 				return x1 // div
 	return False
+
