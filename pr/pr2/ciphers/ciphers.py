@@ -5,7 +5,7 @@ random.seed()
 
 #############################################################
 # The following code doesn't need to be edited. It allows
-# you to read a text file and store it in a single string, 
+# you to read a text file and store it in a single string,
 # and also to write a single string to a text file. This is
 # not an ideal way to work with files, but it will suffice
 # for this assignment.
@@ -40,7 +40,7 @@ def num_to_let(x):
 def let_to_num(a):
     return alpha.index(a.upper())
 
-def shift_char(char, shift): 
+def shift_char(char, shift):
     char_index = let_to_num(char)
     shift_index = let_to_num(shift)
     out_index = char_index + shift_index
@@ -160,7 +160,7 @@ def split_string(s, parts):
 
 def combine_split(split):
     s = ""
-    length = len([j for i in range(len(split)) for j in split[i]]) 
+    length = len([j for i in range(len(split)) for j in split[i]])
     i = 0
     j = 0
     for n in range(length):
@@ -261,7 +261,7 @@ def map_log(d):
             d[key] == 0
 
 # Uncomment the code below once the functions above are complete
-map_log(english_trigrams) 
+map_log(english_trigrams)
 
 def trigram_score(s, english_trigrams):
     trigrams = count_trigrams(s)
@@ -307,8 +307,8 @@ key = sub_gen_key()
 hitchhiker_enc = sub_enc(hitchhiker, key)
 string_to_file("hitchhiker_enc.txt", hitchhiker_enc)
 cipher = simplify_string(file_to_string("hitchhiker_enc.txt"))
-print(sub_break(cipher, english_trigrams)[1])
+#print(sub_break(cipher, english_trigrams)[1])
 print(sub_break(cipher, english_trigrams)[1] == sub_dec(cipher, key))
 
-mystery2 = simplify_string(file_to_string("mystery1.txt"))
-print(sub_break(mystery2, english_trigrams))
+#mystery2 = simplify_string(file_to_string("mystery1.txt"))
+#print(sub_break(mystery2, english_trigrams))
