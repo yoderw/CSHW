@@ -1,4 +1,5 @@
 import random
+from random import choice
 import tkinter
 random.seed()
 
@@ -27,9 +28,9 @@ def plot(xvals, yvals):
     root.mainloop()
 
 #Constants: setting these values controls the parameters of your experiment.
-injurycost = 1 #Cost of losing a fight  
-displaycost = 1 #Cost of displaying   
-foodbenefit = 1 #Value of the food being fought over   
+injurycost = 1 #Cost of losing a fight
+displaycost = 1 #Cost of displaying
+foodbenefit = 1 #Value of the food being fought over
 init_hawk = 0
 init_dove = 0
 init_defensive = 0
@@ -38,6 +39,51 @@ init_evolving = 0
 ########
 # Your code here
 ########
+
+class World:
+
+    def __init__(self):
+        self.birds = []
+
+    def update(self):
+        for bird in self.birds:
+            bird.update()
+
+    def free_food(self, n):
+        for i in range(n):
+            choice(self.birds).eat()
+
+
+
+class Bird:
+
+    def __init__(self, world):
+        self.world = world
+        self.health = 100
+        self.world.birds.append(self)
+
+    def eat(self):
+        self.health += foodbenefit
+
+    def injured(self):
+        self.health -= injurycost
+
+    def display(self):
+        self.health -= displaycost
+
+    def die(self):
+        self.world.birds.remove(self)
+
+    def update(self):
+        self.health -= 1
+        if self.health <= 0:
+            self.die()
+
+class Hawk(Bird):
+
+    species = "Hawk"
+
+    def 
 
 
 
@@ -55,10 +101,8 @@ for i in range(init_evolving):
     Evolving(w)
 
 for t in range(10000):
-    w.free_food(10) 
+    w.free_food(10)
     w.conflict(50)
     w.update()
 w.status()
 #w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
-
-
