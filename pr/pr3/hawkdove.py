@@ -27,9 +27,9 @@ def plot(xvals, yvals):
     root.mainloop()
 
 #Constants: setting these values controls the parameters of your experiment.
-injurycost = 1 #Cost of losing a fight  
-displaycost = 1 #Cost of displaying   
-foodbenefit = 1 #Value of the food being fought over   
+injurycost = 1 #Cost of losing a fight
+displaycost = 1 #Cost of displaying
+foodbenefit = 1 #Value of the food being fought over
 init_hawk = 0
 init_dove = 0
 init_defensive = 0
@@ -55,10 +55,8 @@ for i in range(init_evolving):
     Evolving(w)
 
 for t in range(10000):
-    w.free_food(10) 
+    w.free_food(10)
     w.conflict(50)
     w.update()
 w.status()
 #w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
-
-
