@@ -1,3 +1,29 @@
+"""
+notes:
+- icost = 7; dcost = 1; fben = 8 should return only hawks.
+  instead, I am getting mostly with a handful of doves occasionally.
+  look into this probably has to do with conflict
+- make defense_choice an attribute and not a method
+
+- The following settings:
+
+    injurycost = 10 #Cost of losing a fight
+    displaycost = 1 #Cost of displaying
+    foodbenefit = 12 #Value of the food being fought over
+    init_hawk = 50
+    init_dove = 50
+    init_defensive = 50
+    init_evolving = 0
+
+    Should as well return only hawks. Instead:
+
+    "There are 37 Defensives and 87 Hawks alive in this world."
+
+    Fix this.
+
+"""
+
+
 import random
 from random import choice
 ### need to import tkinter module ###
@@ -29,12 +55,12 @@ def plot(xvals, yvals):
     root.mainloop()
 
 #Constants: setting these values controls the parameters of your experiment.
-injurycost = 1 #Cost of losing a fight
+injurycost = 10 #Cost of losing a fight
 displaycost = 1 #Cost of displaying
-foodbenefit = 1 #Value of the food being fought over
+foodbenefit = 12 #Value of the food being fought over
 init_hawk = 50
 init_dove = 50
-init_defensive = 0
+init_defensive = 50
 init_evolving = 0
 
 ########
@@ -64,7 +90,6 @@ class World:
             bird2 = choice(birds[0:omit] + birds[omit + 1:end])
             bird1.encounter(bird2)
 
-### work on text formatting
     def status(self):
         headcount = {}
         for bird in self.birds:
@@ -77,20 +102,20 @@ class World:
         if 3 > len(headcount) > 1:
             last_mult = True
             comma = False
-        if len(headcount) > 2:
+        elif len(headcount) > 2:
             last_mult = True
             comma = True
         else:
             comma = False
             last_mult = False
         length = len(headcount)
-        i = 1
+        i = 0
         for species in headcount:
+            i += 1
             if i == length and last_mult:
                 print("and {} {}s ".format(headcount[species], species), end="")
             else:
                 print("{} {}s ".format(headcount[species], species), end="")
-            i += 1
         print("alive in this world.")
 
 class Bird:
@@ -164,6 +189,24 @@ class Dove(Bird):
             self.display()
             bird.display()
             choice((self, bird)).eat()
+
+class Defensive(Bird):
+
+    species = "Defensive"
+
+    def update(self):
+        Bird.update(self)
+        if self.health >= 200:
+            self.health -= 100
+            w = self.world
+            w.birds.append(Defensive(w))
+
+    def defend_choice(self):
+        return True
+
+    def encounter(self, bird):
+        Dove.encounter(self, bird)
+
 
 ########
 # The code below actually runs the simulation.  You shouldn't have to do anything to it.
