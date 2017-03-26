@@ -21,13 +21,15 @@ notes:
 
     Fix this.
 
+    - Changed reproduction method (was appending duplicate birds, I think).
+      There still exists a discrepancy bt. desired and actual results (though it is closer?)
+
 """
 
 
 import random
 from random import choice
-### need to import tkinter module ###
-#import tkinter
+import tkinter
 random.seed()
 
 def plot(xvals, yvals):
@@ -77,19 +79,20 @@ class World:
             bird.update()
 
     def free_food(self, n):
-        for i in range(n):
-            if self.birds:
-                choice(self.birds).eat()
+        if self.birds:
+            for i in range(n):
+                    choice(self.birds).eat()
 
     def conflict(self, n):
-        birds = self.birds
         if self.birds:
-            bird1 = choice(birds)
-            omit = birds.index(bird1)
-            end = len(birds) - 1
-            bird2 = choice(birds[0:omit] + birds[omit + 1:end])
+            bird1 = choice(self.birds)
+            omit = self.birds.index(bird1)
+            end = len(self.birds) - 1
+            bird2 = choice(self.birds[0:omit] + self.birds[omit + 1:end])
             bird1.encounter(bird2)
 
+# remove 's' when there is one of a species
+# see if we can make this less spaghetti
     def status(self):
         headcount = {}
         for bird in self.birds:
@@ -115,7 +118,10 @@ class World:
             if i == length and last_mult:
                 print("and {} {}s ".format(headcount[species], species), end="")
             else:
-                print("{} {}s ".format(headcount[species], species), end="")
+                if comma:
+                    print("{} {}s, ".format(headcount[species], species), end="")
+                else:
+                    print("{} {}s ".format(headcount[species], species), end="")
         print("alive in this world.")
 
 class Bird:
@@ -142,6 +148,27 @@ class Bird:
         if self.health <= 0:
             self.die()
 
+class Dove(Bird):
+
+    species = "Dove"
+
+    def update(self):
+        Bird.update(self)
+        if self.health >= 200:
+            self.health -= 100
+            Dove(self.world)
+
+    def defend_choice(self):
+        return False
+
+    def encounter(self, bird):
+        if bird.defend_choice():
+            bird.eat()
+        else:
+            self.display()
+            bird.display()
+            choice([self, bird]).eat()
+
 class Hawk(Bird):
 
     species = "Hawk"
@@ -150,8 +177,7 @@ class Hawk(Bird):
         Bird.update(self)
         if self.health >= 200:
             self.health -= 100
-            w = self.world
-            w.birds.append(Hawk(w))
+            Hawk(self.world)
 
     def defend_choice(self):
         return True
@@ -167,29 +193,6 @@ class Hawk(Bird):
         else:
             self.eat()
 
-
-class Dove(Bird):
-
-    species = "Dove"
-
-    def update(self):
-        Bird.update(self)
-        if self.health >= 200:
-            self.health -= 100
-            w = self.world
-            w.birds.append(Dove(w))
-
-    def defend_choice(self):
-        return False
-
-    def encounter(self, bird):
-        if bird.defend_choice():
-            bird.eat()
-        else:
-            self.display()
-            bird.display()
-            choice((self, bird)).eat()
-
 class Defensive(Bird):
 
     species = "Defensive"
@@ -198,8 +201,7 @@ class Defensive(Bird):
         Bird.update(self)
         if self.health >= 200:
             self.health -= 100
-            w = self.world
-            w.birds.append(Defensive(w))
+            Defensive(self.world)
 
     def defend_choice(self):
         return True
