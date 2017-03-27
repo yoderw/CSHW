@@ -26,9 +26,9 @@ def plot(xvals, yvals):
         c.create_oval(xpixel-3,ypixel-3,xpixel+3,ypixel+3, width=1, fill='red')
     root.mainloop()
 #Constants: setting these values controls the parameters of your experiment.
-injurycost = 8 #Cost of losing a fight
+injurycost = 10 #Cost of losing a fight
 displaycost = 1 #Cost of displaying between two passive birds
-foodbenefit = 2 #Value of the food being fought over
+foodbenefit = 8 #Value of the food being fought over
 init_hawk = 0
 init_dove = 0
 init_defensive = 0
@@ -67,8 +67,9 @@ class World:
             if bird.species=="Evolving Bird":
                 xvals.append(bird.weight)
                 yvals.append(bird.aggression)
-                plot(xvals, yvals)
+        plot(xvals, yvals)
 
+    """
     def status(self):
         pop={}
         for bird in self.birds:
@@ -85,11 +86,43 @@ class World:
                         print(" " +str(pop[species]) + " " + species + "s", end="")
                         And=True
                         print(" left in this world.")
+    """
+    def status(self):
+        headcount = {}
+        for bird in self.birds:
+            species = bird.species
+            if species in headcount:
+                headcount[species] += 1
+            else:
+                headcount[species] = 1
+        print("There are ", end="")
+        if 3 > len(headcount) > 1:
+            last_mult = True
+            comma = False
+        elif len(headcount) > 2:
+            last_mult = True
+            comma = True
+        else:
+            comma = False
+            last_mult = False
+        length = len(headcount)
+        i = 0
+        for species in headcount:
+            i += 1
+            if i == length and last_mult:
+                print("and {} {}s ".format(headcount[species], species), end="")
+            else:
+                if comma:
+                    print("{} {}s, ".format(headcount[species], species), end="")
+                else:
+                    print("{} {}s ".format(headcount[species], species), end="")
+        print("alive in this world.")
 
 class Bird:
+
     def __init__(self, world):
         self.world=world
-        world.birds.append(self)
+        self.world.birds.append(self)
         self.health=100
 
     def eat(self):

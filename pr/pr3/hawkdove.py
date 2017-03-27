@@ -15,6 +15,7 @@ I think the culprit may be Evolving.encounter(). Please debug.
 
 Fixed above by adding nuance to encounter. Scatter plot now returns two large clumps.
 I am not sure if this is satisfactory or not.
+Differs from final results last time around (old.py).
 
 """
 import random
@@ -218,18 +219,20 @@ class Evolving(Bird):
         Bird.__init__(self, world)
         self.aggr = aggr + uniform(-0.5, 0.5) if aggr else uniform(0,1)
         self.weight = weight + uniform(-0.1, 0.1) if weight else uniform(1,3)
+        # self.aggr = aggr + uniform(-0.1, 0.1) if aggr else uniform(0,1)
+        # self.weight = weight + uniform(-0.5, 0.5) if weight else uniform(1,3)
         if not 0 <= self.aggr <= 1:
             self.aggr = round(self.aggr)
         if not 1 <= self.weight <= 3:
             self.weight = round(self.weight)
 
     def update(self):
-        self.health -= .4 + (.6 * self.weight)
-        if self.health <= 0:
-            self.die()
         if self.health >= 200:
             self.health -= 100
             Evolving(self.world, self.aggr, self.weight)
+        self.health -= .4 + (.6 * self.weight)
+        if self.health <= 0:
+            self.die()
 
     def defend_choice(self):
         return uniform(0,1) <= self.aggr
