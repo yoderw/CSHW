@@ -39,7 +39,7 @@ def plot(xvals, yvals):
 #Constants: setting these values controls the parameters of your experiment.
 injurycost = 10 #Cost of losing a fight
 displaycost = 1 #Cost of displaying
-foodbenefit = 12 #Value of the food being fought over
+foodbenefit = 8 #Value of the food being fought over
 init_hawk = 50
 init_dove = 50
 init_defensive = 50
@@ -190,6 +190,15 @@ class Defensive(Bird):
     def encounter(self, bird):
         Dove.encounter(self, bird)
 
+class Evolving(Bird):
+
+    species = "Evolving"
+
+    def defend_choice(self):
+        pass
+
+    def encounter(self):
+        pass
 
 ########
 # The code below actually runs the simulation.  You shouldn't have to do anything to it.
