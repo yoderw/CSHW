@@ -1,28 +1,8 @@
 """
 notes:
-- icost = 7; dcost = 1; fben = 8 should return only hawks.
-  instead, I am getting mostly with a handful of doves occasionally.
-  look into this probably has to do with conflict
-- make defense_choice an attribute and not a method
 
-- The following settings:
-
-    injurycost = 10 #Cost of losing a fight
-    displaycost = 1 #Cost of displaying
-    foodbenefit = 12 #Value of the food being fought over
-    init_hawk = 50
-    init_dove = 50
-    init_defensive = 50
-    init_evolving = 0
-
-    Should as well return only hawks. Instead:
-
-    "There are 37 Defensives and 87 Hawks alive in this world."
-
-    Fix this.
-
-    - Changed reproduction method (was appending duplicate birds, I think).
-      There still exists a discrepancy bt. desired and actual results (though it is closer?)
+- make defense_choice an attribute and not a method?
+-
 
 """
 
@@ -85,11 +65,12 @@ class World:
 
     def conflict(self, n):
         if self.birds:
-            bird1 = choice(self.birds)
-            omit = self.birds.index(bird1)
-            end = len(self.birds) - 1
-            bird2 = choice(self.birds[0:omit] + self.birds[omit + 1:end])
-            bird1.encounter(bird2)
+            for i in range(n):
+                bird1 = choice(self.birds)
+                omit = self.birds.index(bird1)
+                end = len(self.birds) - 1
+                bird2 = choice(self.birds[0:omit] + self.birds[omit + 1:end])
+                bird1.encounter(bird2)
 
 # remove 's' when there is one of a species
 # see if we can make this less spaghetti
