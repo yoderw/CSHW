@@ -1,14 +1,24 @@
 """
-notes:
+The following constants:
 
-- make defense_choice an attribute and not a method?
--
+injurycost = 10 #Cost of losing a fight
+displaycost = 1 #Cost of displaying
+foodbenefit = 8 #Value of the food being fought over
+init_hawk = 0
+init_dove = 0
+init_defensive = 0
+init_evolving = 150
+
+Should yield a scatter plot with two clumps. Not the case.
+I am NOT running into the same problem that I was last time around (ie. no Evolving.die());
+I think the culprit may be Evolving.encounter(). Please debug.
+
+Fixed above by adding nuance to encounter. Scatter plot now returns two large clumps.
+I am not sure if this is satisfactory or not.
 
 """
-
-
 import random
-from random import choice
+from random import choice, uniform
 import tkinter
 random.seed()
 
@@ -22,7 +32,7 @@ def plot(xvals, yvals):
     c.create_line(50,350,650,350, width=3)
     for i in range(5):
         x = 50 + (i * 150)
-        c.create_text(x,355,anchor='n', text='%s'% (.5*(i+2) ) )
+        c.create_text(x,355, anchor='n', text='%s'% (.5*(i+2) ) )
     #y-axis
     c.create_line(50,350,50,50, width=3)
     for i in range(5):
@@ -40,10 +50,10 @@ def plot(xvals, yvals):
 injurycost = 10 #Cost of losing a fight
 displaycost = 1 #Cost of displaying
 foodbenefit = 8 #Value of the food being fought over
-init_hawk = 50
-init_dove = 50
-init_defensive = 50
-init_evolving = 0
+init_hawk = 0
+init_dove = 0
+init_defensive = 0
+init_evolving = 150
 
 ########
 # Your code here
@@ -104,6 +114,16 @@ class World:
                 else:
                     print("{} {}s ".format(headcount[species], species), end="")
         print("alive in this world.")
+
+    def evolvingPlot(self):
+        xvals = [] # weight
+        yvals = [] # aggr
+        for bird in self.birds:
+            if bird.species == "Evolving":
+                xvals.append(bird.weight)
+                yvals.append(bird.aggr)
+        plot(xvals, yvals)
+
 
 class Bird:
 
@@ -194,11 +214,44 @@ class Evolving(Bird):
 
     species = "Evolving"
 
-    def defend_choice(self):
-        pass
+    def __init__(self, world, aggr=None, weight=None):
+        Bird.__init__(self, world)
+        self.aggr = aggr + uniform(-0.5, 0.5) if aggr else uniform(0,1)
+        self.weight = weight + uniform(-0.1, 0.1) if weight else uniform(1,3)
+        if not 0 <= self.aggr <= 1:
+            self.aggr = round(self.aggr)
+        if not 1 <= self.weight <= 3:
+            self.weight = round(self.weight)
 
-    def encounter(self):
-        pass
+    def update(self):
+        self.health -= .4 + (.6 * self.weight)
+        if self.health <= 0:
+            self.die()
+        if self.health >= 200:
+            self.health -= 100
+            Evolving(self.world, self.aggr, self.weight)
+
+    def defend_choice(self):
+        return uniform(0,1) <= self.aggr
+
+    def encounter(self, bird):
+        self_def = self.defend_choice()
+        bird_def = bird.defend_choice()
+        if self_def and bird_def:
+            contestants = [self, bird]
+            target = self.weight/(self.weight + bird.weight)
+            roll = uniform(0,1)
+            winner = self if roll <= target else bird
+            contestants.remove(winner)
+            loser = contestants[0]
+            winner.eat()
+            loser.injured()
+        elif self_def or bird_def:
+            self.eat() if self_def else bird.eat()
+        else:
+            self.display()
+            bird.display()
+            choice([self, bird]).eat()
 
 ########
 # The code below actually runs the simulation.  You shouldn't have to do anything to it.
@@ -218,4 +271,4 @@ for t in range(10000):
     w.conflict(50)
     w.update()
 w.status()
-#w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
+w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
