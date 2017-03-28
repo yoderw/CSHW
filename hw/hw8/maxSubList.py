@@ -23,9 +23,9 @@ def maxSublist(ls):
             break
         if sum(ls[p1:p2]) > sum(maxSub):
             maxSub = ls[p1:p2]
-        elif sum(ls[p1 + 1:p2]) > sum(ls[p1:p2-1]):
+        elif sum(ls[p1 + 1:p2]) > sum(ls[p1:p2 - 1]):
             p1 += 1
-        elif sum(ls[p1:p2-1]) >= sum(ls[p1 + 1:p2]):
+        elif sum(ls[p1:p2 - 1]) >= sum(ls[p1 + 1:p2]):
             p2 -= 1
         i += 1
     print(i)
