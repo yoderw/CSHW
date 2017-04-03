@@ -1,23 +1,3 @@
-"""
-The following constants:
-
-injurycost = 10 #Cost of losing a fight
-displaycost = 1 #Cost of displaying
-foodbenefit = 8 #Value of the food being fought over
-init_hawk = 0
-init_dove = 0
-init_defensive = 0
-init_evolving = 150
-
-Should yield a scatter plot with two clumps. Not the case.
-I am NOT running into the same problem that I was last time around (ie. no Evolving.die());
-I think the culprit may be Evolving.encounter(). Please debug.
-
-Fixed above by adding nuance to encounter. Scatter plot now returns two large clumps.
-I am not sure if this is satisfactory or not.
-Differs from final results last time around (old.py).
-
-"""
 import random
 from random import choice, uniform
 import tkinter
@@ -83,8 +63,6 @@ class World:
                 bird2 = choice(self.birds[0:omit] + self.birds[omit + 1:end])
                 bird1.encounter(bird2)
 
-# remove 's' when there is one of a species
-# see if we can make this less spaghetti
     def status(self):
         headcount = {}
         for bird in self.birds:
@@ -94,16 +72,9 @@ class World:
             else:
                 headcount[species] = 1
         print("There are ", end="")
-        if 3 > len(headcount) > 1:
-            last_mult = True
-            comma = False
-        elif len(headcount) > 2:
-            last_mult = True
-            comma = True
-        else:
-            comma = False
-            last_mult = False
         length = len(headcount)
+        last_mult = True if length > 1 else False
+        comma = True if length > 2 else False
         i = 0
         for species in headcount:
             i += 1
