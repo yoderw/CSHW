@@ -48,9 +48,21 @@ def plot(xvals, yvals):
     root.mainloop()
 
 #Constants: setting these values controls the parameters of your experiment.
+<<<<<<< HEAD
 injurycost = 10 #Cost of losing a fight
 displaycost = 1 #Cost of displaying
 foodbenefit = 8 #Value of the food being fought over
+=======
+<<<<<<< HEAD
+injurycost = 1 #Cost of losing a fight
+displaycost = 1 #Cost of displaying
+foodbenefit = 1 #Value of the food being fought over
+=======
+injurycost = 10 #Cost of losing a fight
+displaycost = 1 #Cost of displaying
+foodbenefit = 8 #Value of the food being fought over
+>>>>>>> pr3
+>>>>>>> 9495367d647dbb0129cc207a1e42b71dc252e9d5
 init_hawk = 0
 init_dove = 0
 init_defensive = 0
@@ -83,8 +95,11 @@ class World:
                 bird2 = choice(self.birds[0:omit] + self.birds[omit + 1:end])
                 bird1.encounter(bird2)
 
+<<<<<<< HEAD
 # remove 's' when there is one of a species
 # see if we can make this less spaghetti
+=======
+>>>>>>> 9495367d647dbb0129cc207a1e42b71dc252e9d5
     def status(self):
         headcount = {}
         for bird in self.birds:
@@ -94,6 +109,7 @@ class World:
             else:
                 headcount[species] = 1
         print("There are ", end="")
+<<<<<<< HEAD
         if 3 > len(headcount) > 1:
             last_mult = True
             comma = False
@@ -104,6 +120,11 @@ class World:
             comma = False
             last_mult = False
         length = len(headcount)
+=======
+        length = len(headcount)
+        last_mult = True if length > 1 else False
+        comma = True if length > 2 else False
+>>>>>>> 9495367d647dbb0129cc207a1e42b71dc252e9d5
         i = 0
         for species in headcount:
             i += 1
@@ -274,4 +295,12 @@ for t in range(10000):
     w.conflict(50)
     w.update()
 w.status()
+<<<<<<< HEAD
 w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
+=======
+<<<<<<< HEAD
+#w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
+=======
+w.evolvingPlot()  #This line adds a plot of evolving birds. Uncomment it when needed.
+>>>>>>> pr3
+>>>>>>> 9495367d647dbb0129cc207a1e42b71dc252e9d5
