@@ -1,4 +1,4 @@
-counts = lambda xs: [xs.count(i) for i in range(max(xs) + 1)]
+#counts = lambda xs: [xs.count(i) for i in range(max(xs) + 1)]
 
 def counts(xs, n):
 	ls = [0 for i in range(n)]
@@ -6,6 +6,7 @@ def counts(xs, n):
 		ls[i] += 1
 	return ls
 
+# running time: n
 def countsort(aList, m):
     ls = counts(aList, m)
     xs = [i for i in range(len(ls)) for j in range(ls[i])]
