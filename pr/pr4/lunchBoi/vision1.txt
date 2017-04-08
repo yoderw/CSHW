@@ -1,0 +1,32 @@
+Map View:                        Character Sheet:                     Room View:                      Menu:
+                                                                    
+                                                                    
+ ____________                   | Paul                              | Room B1: Mess Hall            | Lunch Boi v0.1
+|            |                  |                                   |                               |
+|            |                  |   Local Time: 02:45               |   > Terminal                  | > Resume
+|            |      ______      |   Location: B1                    |     Window                    |   Save
+|     B1     |     |      |     |                                   |     Refridgerator             |   Credits
+|            |     |  B2  |     | Inventory: 4/10                   |                               |   Quit
+|            /-----/      |     |                                   |                               |   
+|____________|     |__/___|     |   > Blue Key Card                 |                               |
+                      -         |     Red Key Card                  |                               |
+                      -         |     Toolkit                       |                               |
+                    __-___      |     Torch                         |                               |
+                   |  /   |     |                                   |                               |
+  > B2             |      |     |                                   |                               |
+                   |      |     | "This will open any Blue doors."  |                               |
+                   |  B3  |     |                                   |                               |
+                   |      |     |                                   |                               |
+                   |      |     |                                   |                               |
+                   |______|     |                                   |                               |
+                                |                                   |                               |
+                                |                                   |                               |
+                                |                                   |                               |
+      [Enter] -- Travel: B2     | [Enter] -- Use Blue Key Card      | [Enter] -- Interact: Terminal | [Enter] -- Select
+      [C] -- Character Sheet    | [M] -- Map View                   | [C]     -- Character Sheet    | Navigate menu with arrow keys
+      [R] -- Room View          | [R] -- Room View                  | [M]     -- Map View           |
+      [Q] -- Quit to Menu       | [Q] -- Quit to Menu               | [Q]     -- Quit to Menu       |
+
+Rather rudimentary (ie, the actual window size will be larger), yet captures what I am going for. Several main screens that will
+contain the (majority) of the game play-- I have not included the terminal window, which may as well be its own, separate, game.
+The end result of the above windows should also be less empty, but so far I am loving the simplicity of the project.

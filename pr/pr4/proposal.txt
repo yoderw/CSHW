@@ -1,0 +1,10 @@
+I plan on working alone. My game is going to resemble a text based adventure,
+but will make use of a rudimentary GUI. This will allow the player to select
+options from various menu screens in order to undertake certain actions. The game
+will take place on a spaceship (think 2001, Alien), and as such the player will
+need to occasionally interact with the ship's onboard AI. The player will do so
+through a terminal. Using a combination of this and navigating throughout the
+maze-like ship, the player will attempt to solve a series of puzzles. There will
+be no combat, and given the nature of the setting, the world will be contained
+(ie., not open). I will be using the curses module from the python standard library
+for menu creation and interaction. 
