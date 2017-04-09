@@ -19,7 +19,7 @@ def main(stdscr):
         stdscr.addstr(i, 0, '10 divided by {} is {}'.format(v, 10/v))
 
     stdscr.refresh()
-    stdscr.getkey()
+    stdscr.getkey() 
 wrapper(main)
 
 curses.nocbreak()
