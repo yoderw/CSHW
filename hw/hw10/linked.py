@@ -7,44 +7,43 @@ class Node:
 class Linked:
 
 	def __init__(self):
-		self.first = None
+		self.start = None
 
 	def display(self):
 		print("[", end="")
-		if self.first:
-			curr = self.first
+		if self.start:
+			curr = self.start
 			while curr.next:
-				print(curr.value, end="") 
+				print(curr.value, end="")
 				print(", ", end="")
 				curr = curr.next
 			print(curr.value, end="")
 		print("]")
 
 	def getValue(self, index):
-		curr = self.first
-		while index > 0:
-			curr = curr.next()
-			index -= 1
+		curr = self.start
+		for i in range(index):
+			curr = curr.next
 		return curr.value
 
 	def append(self, value):
-		if self.first is None:
-			self.first = Node(value)
+		if self.start is None:
+			self.start = Node(value)
 		else:
-			curr = self.first
+			curr = self.start
 			while curr.next:
 				curr = curr.next
 			curr.next = Node(value)
 
 	def isEmpty(self):
-		return self.first is None
+		return self.start is None
 
 	def length(self):
-		if self.first is None:
+		if self.start is None:
 			return 0
 		else:
 			count = 1
-			curr = self.first
+			curr = self.start
 			while curr.next:
 				curr = curr.next
 				count += 1
@@ -52,57 +51,55 @@ class Linked:
 
 	def insert(self, index, value):
 		if index == 0:
-			self.first = Node(value, self.first)
+			self.start = Node(value, self.start)
 		else:
-			curr = self.first
-			while index > 1:
+			curr = self.start
+			for i in range(1, index):
 				curr = curr.next
-				index -= 1
 			curr.next = Node(value, curr.next)
 
 	def delete(self, index):
 		if index == 0:
-			self.first = self.first.next
+			self.start = self.start.next
 		else:
-			prev = self.first
-			curr = prev.next
-			while index > 1:
-				prev = curr
+			prior = self.start
+			curr = prior.next
+			for i in range(1, index):
+				prior = curr
 				curr = curr.next
-				index -= 1
-			prev.next = curr.next
+			prior.next = curr.next
 
 	def sum(self):
-		if self.first is None:
+		if self.start is None:
 			return 0
 		else:
 			sum = 0
-			curr = self.first
+			curr = self.start
 			while curr:
 				sum += curr.value
 				curr = curr.next
 			return sum
 
 	def count(self, value):
-		if self.first is None:
+		if self.start is None:
 			return 0
 		else:
 			count = 0
-			curr = self.first
+			curr = self.start
 			while curr:
 				count += 1 if curr.value == value else 0
 				curr = curr.next
 			return count
 
 	def apply(self, func):
-		curr = self.first
+		curr = self.start
 		while curr:
 			curr.value = func(curr.value)
 			curr = curr.next
 
 	def deleteAll(self, value):
 		i = 0
-		curr = self.first
+		curr = self.start
 		while curr:
 			if curr.value == value:
 				self.delete(i)
@@ -113,13 +110,13 @@ class Linked:
 class Sorted(Linked):
 
 	def append(self, value):
-		if self.first is None:
-			self.first = Node(value)
+		if self.start is None:
+			self.start = Node(value)
 		else:
-			if self.first.value > value:
-				self.first = Node(value, self.first)
+			if self.start.value > value:
+				self.start = Node(value, self.start)
 			else:
-				prev = self.first
+				prev = self.start
 				curr = prev.next
 				while curr:
 					if prev.value <= value <= curr.value:
@@ -138,39 +135,48 @@ class DNode:
 class DLinked(Linked):
 
 	def __init__(self):
-		self.first = None
-		self.last = None
+		self.start = None
+		self.end = None
 
 	def append(self, value):
-		if self.first is None:
-			self.first = DNode(value)
-			self.last = self.first
-		elif self.first is self.last:
-			self.last = DNode(value, self.first)
-			self.first.next = self.last
+		if self.start is None:
+			self.start = DNode(value)
+			self.end = self.start
+		elif self.start is self.end:
+			self.end = DNode(value, self.start)
+			self.start.next = self.end
 		else:
-			self.last = Node(value, self.last)
+			node = DNode(value, self.end)
+			self.end.next = node
+			self.end = node
 
-	#insert does not work... display appears to remove self.last
 	def insert(self, index, value):
 		if index == 0:
-			self.first = DNode(value, self.first, self.last)
-		else:
-			curr = self.first
-			while index > 1:
-				curr = curr.next
-				index -= 1
-			curr.next = DNode(value, curr, curr.next.next)
+			if self.start is None:
+				self.start = DNode(value)
+				self.end = self.start
 
-	#has not yet been modified
+		elif self.start is self.end:
+			self.end = DNode(value, self.start)
+			self.start.next = self.end
+			
+		else:
+			curr = self.start
+			for i in range(1, index):
+				curr = curr.next
+			if curr.next:
+				curr.next = DNode(value, curr, curr.next)
+			else:
+				curr.next = DNode(value, curr)
+
 	def delete(self, index):
 		if index == 0:
-			self.first = self.first.next
+			self.start = self.start.next
 		else:
-			prev = self.first
-			curr = prev.next
-			while index > 1:
-				prev = curr
+			prior = self.start
+			curr = prior.next
+			for i in range(1, index):
+				prior = curr
 				curr = curr.next
-				index -= 1
-			prev.next = curr.next
+			prior.next = curr.next
+			prior.next.prev = prior

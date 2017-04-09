@@ -50,7 +50,10 @@ class Queue:
 
 	def dequeue(self):
 		head = self.first
-		self.first = self.first.next
+		if self.first is self.last:
+			self.first = self.last = None
+		else:
+			self.first = self.first.next
 		return head.value
 
 	def head(self):
