@@ -155,11 +155,12 @@ class DLinked(Linked):
 			if self.start is None:
 				self.start = DNode(value)
 				self.end = self.start
+			else:
+				self.start = DNode(value, None, self.start)
 
-		elif self.start is self.end:
-			self.end = DNode(value, self.start)
-			self.start.next = self.end
-			
+		elif index == self.length():
+			self.append(value)
+
 		else:
 			curr = self.start
 			for i in range(1, index):
