@@ -1,3 +1,7 @@
+4/11:
+Curses windows can be made as objects, constructing a string or similar data-type
+to be "printed" to the terminal by curses. 
+
 4/7:
 I am beginning by creating skeleton code similar to that in .../pr4/starter.
 This includes rudimentary character, world, object, and respective subsidiary classes.
