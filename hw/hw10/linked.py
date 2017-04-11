@@ -157,6 +157,7 @@ class DLinked(Linked):
 				self.end = self.start
 			else:
 				self.start = DNode(value, None, self.start)
+				self.start.next.prev = self.start
 
 		elif index == self.length():
 			self.append(value)
@@ -167,12 +168,15 @@ class DLinked(Linked):
 				curr = curr.next
 			if curr.next:
 				curr.next = DNode(value, curr, curr.next)
-			else:
-				curr.next = DNode(value, curr)
+				curr.next.next.prev = curr.next
 
 	def delete(self, index):
 		if index == 0:
 			self.start = self.start.next
+			if self.start:
+				self.start.prev = None
+			else:
+				self.end = None
 		else:
 			prior = self.start
 			curr = prior.next
@@ -180,4 +184,7 @@ class DLinked(Linked):
 				prior = curr
 				curr = curr.next
 			prior.next = curr.next
-			prior.next.prev = prior
+			if prior.next:
+				prior.next.prev = prior
+			else:
+				self.end = self.end.prev

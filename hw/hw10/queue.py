@@ -1,32 +1,3 @@
-"""
----------------------
-Enqueue of 1.
-You modified that queue correctly.
----------------------
-Enqueue of 2.
-You modified that queue correctly.
----------------------
-Enqueue of 3.
-You modified that queue correctly.
----------------------
-Dequeue of 1.
-You modified that queue correctly.
----------------------
-Enqueue of 4.
-You modified that queue correctly.
----------------------
-Dequeue of 2.
-You modified that queue correctly.
----------------------
-Dequeue of 3.
-You modified that queue correctly.
----------------------
-Dequeue of 4.
-Your queue appears empty but 'last' is not None.
-You must have modified that queue incorrectly.
----------------------
-A test of 'Queue' did not pass.
-"""
 class Node:
 
 	def __init__(self, value, next=None):
@@ -54,7 +25,7 @@ class Queue:
 			self.first = self.last = None
 		else:
 			self.first = self.first.next
-		return head.value
+		return head.value if head else None
 
 	def head(self):
-		return self.first.value
+		return self.first.value if self.first else None
