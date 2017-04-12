@@ -23,7 +23,7 @@ class Player(Character):
             if room.locked:
                 if room.key in self.inventory:
                     self.inventory.remove(key)
-                    room.locked = False
+                    room.unlock()
                     self.location = room
                     room.occupy()
             else:

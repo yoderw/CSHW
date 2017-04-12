@@ -11,6 +11,9 @@ class Room:
         self.locked = False
         self.key = None
 
+    def unlock(self):
+        self.locked = False
+
     def setName(self, name):
         self.name = name
 
@@ -37,7 +40,8 @@ class World:
     def newRoom(self, name, neighbors={}):
         room = Room(name, neighbors)
         for r in room.neighbors:
-            r.neighbors[room.name] = room
+            self.rooms[r].neighbors[room.name] = room
+            room.neighbors[r] = self.rooms[r]
         self.rooms[room.name] = room
 
     def update(self):
