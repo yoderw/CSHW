@@ -1,5 +1,12 @@
 import os, curses
 from curses import wrapper
-from character import Character, Player
+from player import Player
 from world import Room, World
 from items import Item, Key
+
+world = World()
+player = world.player
+world.newRoom('B1')
+world.newRoom('B3')
+world.newRoom('B2', ['B1', 'B3'])
+world.setStart('B1')
