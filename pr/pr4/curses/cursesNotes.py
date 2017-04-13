@@ -18,7 +18,7 @@ stdscr.keypad(True)
 ### wrapper() ###
 from curses import wrapper
 
-# initializatizes above methods, and colors if availible
+# initializes above methods, and colors if availible
 # makes debugging easier by returning the terminal to its original state,
 # after wrapper() returns
 def main(stdscr):

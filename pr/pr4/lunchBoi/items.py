@@ -4,7 +4,7 @@ class Item:
         self.name = name
         self.description = description
         self.perishable = False
-        #self.activation???
+        self.action = None
 
 class Key(Item):
 

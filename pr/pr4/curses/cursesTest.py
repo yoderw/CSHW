@@ -13,12 +13,8 @@ def main(stdscr):
     stdscr.clear()
 
     while True:
-        c = stdscr.getch()
-        if c == ord('p'):
-            print("Success")
-        elif c == ord('q'):
-            break  # Exit the while()
-
+        pass
+        
     stdscr.refresh()
     stdscr.getkey()
 wrapper(main)
