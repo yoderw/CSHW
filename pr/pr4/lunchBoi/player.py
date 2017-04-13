@@ -20,8 +20,9 @@ class Player:
     def travel(self, r):
         if self.canTravel(r):
             r = self.world.rooms[r]
-            self.inventory.remove(r.key)
-            r.unlock()
+            if r.locked:
+                self.inventory.remove(r.key)
+                r.unlock()
             self.location = r
             self.world.update()
 

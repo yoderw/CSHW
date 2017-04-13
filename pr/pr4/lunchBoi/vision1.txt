@@ -1,13 +1,13 @@
 Map View:                        Character Sheet:                     Room View:                      Menu:
-                                                                    
-                                                                    
+
+
  ____________                   | Paul                              | Room B1: Mess Hall            | Lunch Boi v0.1
 |            |                  |                                   |                               |
 |            |                  |   Local Time: 02:45               |   > Terminal                  | > Resume
 |            |      ______      |   Location: B1                    |     Window                    |   Save
-|     B1     |     |      |     |                                   |     Refridgerator             |   Credits
+|     B1     |     |      |     |                                   |     Refrigerator              |   Credits
 |            |     |  B2  |     | Inventory: 4/10                   |                               |   Quit
-|            /-----/      |     |                                   |                               |   
+|            /-----/      |     |                                   |                               |
 |____________|     |__/___|     |   > Blue Key Card                 |                               |
                       -         |     Red Key Card                  |                               |
                       -         |     Toolkit                       |                               |

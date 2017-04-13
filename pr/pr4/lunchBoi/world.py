@@ -34,6 +34,9 @@ class Room:
         self.key = None
         self.discovered = False
 
+    def lock(self):
+        self.locked = True
+
     def unlock(self):
         self.locked = False
 
