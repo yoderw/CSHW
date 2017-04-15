@@ -24,6 +24,13 @@ def termCurses():
     quit()
 #END
 
+class MenuItem:
+    # constructs a menu item from an arbitrary object; eg. a Room or item
+    def __init__(self, name, description, action=None):
+        self.name = name
+        self.description = description
+        self.action = action
+
 class Header:
 
     def __init__(self, string="", height=0, width=0):
@@ -31,25 +38,12 @@ class Header:
         self.height = height
         self.width = width
 
-    def draw(self):
-        pass
-
 class Footer:
 
     def __init__(self, string="", height=0, width=0):
         self.string = string
         self.height = height
         self.width = width
-
-    def draw(self):
-        pass
-
-class MenuItem:
-    # constructs a menu item from an arbitrary object; eg. a Room or item
-    def __init__(self, name, description, action=None):
-        self.name = name
-        self.description = description
-        self.action = action
 
 class Menu:
     # Constructs an interactive menu. Takes a stdscr, a dictionary of menuItems,
@@ -78,11 +72,13 @@ class Menu:
     def menuItemsCompile(self):
         pass
 
-    def drawHeader(self, y, x):
-        self.header.draw()
+    def drawHeader(self, y=0, x=0):
+        screen = self.screen
+        screen.addstr(y, x, self.header.string)
 
-    def drawFooter(self, y, x):
-        self.footer.draw()
+    def drawFooter(self, y=0, x=0):
+        screen = self.screen
+        screen.addstr(y, x, self.footer.string)
 
     def drawCursor(self):
         self.cursor.draw()
@@ -95,7 +91,8 @@ class Menu:
             screen.addstr(i, self.init_x + 2, item + "\n")
             i += 1
         self.drawCursor()
-        self.drawfooter()
+        footer_y = self.init_y_adjust + i + 2
+        self.drawFooter(footer_y)
 
     #TEMP
     def drawStringSolo(self, str):
