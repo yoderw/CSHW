@@ -56,7 +56,7 @@ class Menu:
     def drawString(self, str):
         screen = self.screen
         screen.clear()
-        screen.addstr(str)
+        screen.addstr(self.init_y, self.init_x, str)
         screen.refresh
 
     def cursorSelect(self):
@@ -107,20 +107,21 @@ class Menu:
 
 
 #TEMP
-initCurses()
+#initCurses()
 menuItems = {"Item1":"Action1",
              "Item2":"Action2",
              "Item3":"Action3",
              "Item4":"Action4"
              }
-menu = Menu(stdscr, menuItems)
-curses.wrapper(Menu.loop(menu))
-termCurses()
-quit()
+menu = Menu(stdscr, menuItems, 10, 10)
+#curses.wrapper(Menu.loop(menu))
+#termCurses()
+#quit()
 #END
 
 #NOTES
-#can exec code in values using exec(value)
+# can exec code in values using exec(value);
+# this may be useful for storing in item objects dicts
 menuItems = {
 "Item1":'''
 screen.clear()

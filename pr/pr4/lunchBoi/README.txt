@@ -1,3 +1,15 @@
+4/14:
+Menu() works, aka I can move a cursor and execute code with KEY_RIGHT.
+I think I may have to augment and move Menu.loop() to some higher-order class,
+so that I can print the header and footer of a panel above and below the menu.
+I think this will work as the header and the footer will be static-- the only
+thing moving should be the menu. I need to finish this by tomorrow evening so that
+I can get ~20 points of fluff done by Wednesday.
+
+I can execute str(body of code) using exec(body)-- this may be very useful later on
+if I play my cards right-- I can store the "actions" of items as strings in a dictionary.
+dictionaries are going to be my friends in this project.
+
 4/12:
 Began working on menu stuff. Skeleton code is looking pretty solid.
 I need to make a map object (and possibly others) that will be separate from the
