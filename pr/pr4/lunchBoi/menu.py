@@ -24,21 +24,50 @@ def termCurses():
     quit()
 #END
 
-class MenuItem:
+class Header:
 
-    def __init__(self):
+    def __init__(self, string="", height=0, width=0):
+        self.string = string
+        self.height = height
+        self.width = width
+
+    def draw(self):
         pass
 
-class Menu:
+class Footer:
 
-    def __init__(self, screen, menuItems, init_y=0, init_x=0):
+    def __init__(self, string="", height=0, width=0):
+        self.string = string
+        self.height = height
+        self.width = width
+
+    def draw(self):
+        pass
+
+class MenuItem:
+    # constructs a menu item from an arbitrary object; eg. a Room or item
+    def __init__(self, name, description, action=None):
+        self.name = name
+        self.description = description
+        self.action = action
+
+class Menu:
+    # Constructs an interactive menu. Takes a stdscr, a dictionary of menuItems,
+    # a header (complex, non-interactive string, placed above interative portion),
+    # a footer (complex, non-interactive string, placed below interactive portion),
+    # and a init_y/init_x combo. The (y,x) combo dictates the up-left corner.
+    # This is the main object used in interacting with the game.
+    def __init__(self, screen, menuItems={}, header=None, footer=None init_y=0, init_x=0):
         self.screen = screen
         self.menuItems = menuItems
         self.menuItemsList = [i for i in menuItems]
         self.menuItemsList.sort()
         self.depth = len(menuItems)
         self.depthIndex = self.depth - 1
+        self.header = header
+        self.footer = footer
         self.init_y = init_y
+        self.init_y_adjust = self.init_y + self.header.height + 2
         self.init_x = init_x
         self.selected = 0
         self.cursor = Cursor(self, self.depth)
@@ -46,18 +75,35 @@ class Menu:
     def update(self):
         pass
 
-    def draw(self):
+    def menuItemsCompile(self):
+        pass
+
+    def drawHeader(self, y, x):
+        self.header.draw()
+
+    def drawFooter(self, y, x):
+        self.footer.draw()
+
+    def drawCursor(self):
+        self.cursor.draw()
+
+    def drawAll(self):
         screen = self.screen
-        i = self.init_y
+        self.drawHeader()
+        i = self.init_y_adjust
         for item in self.menuItemsList:
             screen.addstr(i, self.init_x + 2, item + "\n")
             i += 1
+        self.drawCursor()
+        self.drawfooter()
 
-    def drawString(self, str):
+    #TEMP
+    def drawStringSolo(self, str):
         screen = self.screen
         screen.clear()
         screen.addstr(self.init_y, self.init_x, str)
         screen.refresh
+    #END
 
     def cursorSelect(self):
         #TEMP
@@ -65,7 +111,7 @@ class Menu:
         item = self.menuItemsList[self.selected]
         item = self.menuItems[item]
         while True:
-            self.drawString(item)
+            self.drawStringSolo(item)
             event = screen.getch()
             if event == curses.KEY_LEFT:
                 break
@@ -101,22 +147,21 @@ class Menu:
             elif event == ord('q'):
                 break
             screen.clear()
-            self.cursor.draw()
             self.draw()
             screen.refresh()
 
 
 #TEMP
-#initCurses()
+initCurses()
 menuItems = {"Item1":"Action1",
              "Item2":"Action2",
              "Item3":"Action3",
              "Item4":"Action4"
              }
 menu = Menu(stdscr, menuItems, 10, 10)
-#curses.wrapper(Menu.loop(menu))
-#termCurses()
-#quit()
+curses.wrapper(Menu.loop(menu))
+termCurses()
+quit()
 #END
 
 #NOTES
