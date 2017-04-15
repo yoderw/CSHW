@@ -25,12 +25,12 @@ The idea is to have three or four main screens:
 -- Various menus, formatted in the same way, prompting action of the PC.
 -- One of these menus will be static, containing the PC's character sheet, settings, etc.
 Curses will be used to construct these screens, to use key press recognition to switch
-between them and to select/hightlight menu items, to standardize the terminal window size,
+between them and to select/highlight menu items, to standardize the terminal window size,
 to emulate a terminal window.
 
 In regards to puzzle design, I should look to Mark Brown's Boss Key videos for inspiration.
 
-Aesthetic story inspiration comes from:
+Aesthetic/story inspiration comes from:
 Alien, 2001, Event[0] (Gameplay), Interstellar, Duskers (UI, Gameplay), Fallout (UI), The Witness (Gameplay?)
 
 Working Title: LunchBoi
