@@ -7,7 +7,7 @@ class Cursor:
         self.screen = self.menu.screen
         self.depth = depth
         self.x = self.init_x = self.menu.init_x
-        self.y = self.init_y = self.menu.init_y
+        self.y = self.init_y = self.menu.init_y_adjust
         self.min_y = self.init_y
         self.max_y = self.init_y + (self.depth - 1)
         self.string = string
