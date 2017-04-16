@@ -6,6 +6,8 @@ Maybe try curses.panel for stacking menus?
 '''
 import curses
 from cursor import Cursor
+from header import Header
+from footer import Footer
 
 #TEMP
 def initCurses():
@@ -31,26 +33,6 @@ class MenuItem:
         self.description = description
         self.action = action
 
-class Header:
-
-    def __init__(self, string="", height=0, width=0, init_y=0, init_x=0, spacer=0):
-        self.string = string
-        self.height = height
-        self.width = width
-        self.y = self.init_y = init_y
-        self.x = self.init_x = init_x
-        self.spacer = spacer
-
-class Footer:
-
-    def __init__(self, string="", height=0, width=0, init_y=0, init_x=0, spacer=0):
-        self.string = string
-        self.height = height
-        self.width = width
-        self.y = self.init_y = init_y
-        self.x = self.init_x = init_x
-        self.spacer = spacer
-
 class Menu:
     # Constructs an interactive menu. Takes a stdscr, a dictionary of menuItems,
     # a header (complex, non-interactive string, placed above interative portion),
@@ -64,37 +46,48 @@ class Menu:
         self.menuItemsList.sort()
         self.depth = len(menuItems)
         self.depthIndex = self.depth - 1
-        self.header = header
-        self.footer = footer
+        if header:
+            header.menu = self
+            self.header = header
+        else:
+            self.header = Header(self)
+        if footer:
+            footer.menu = self
+            self.footer = footer
+        else:
+            self.footer = Footer(self)
         self.init_y = init_y
         self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
-        self.x = self.init_x = init_x 
+        self.x = self.init_x = init_x
         self.selected = 0
         self.cursor = Cursor(self, self.depth)
 
     def update(self):
-        pass
+        self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
+        self.cursor = Cursor(self, self.depth)
 
     def menuItemsCompile(self):
         pass
 
+    def headerCompile(self, header):
+        if type(header) is str:
+            self.header = Header(self, str)
+        else:
+            self.header = header
+
+    def footerCompile(self, footer):
+        if type(header) is str:
+            self.footer = Footer(self, str)
+        else:
+            self.footer = footer
+
     def drawHeader(self, y=0, x=0):
-        if y == 0:
-            y = self.header.y
-        if x == 0:
-            x = self.header.x
         if self.header:
-            screen = self.screen
-            screen.addstr(y, x, self.header.string)
+            self.header.draw(y, x)
 
     def drawFooter(self, y=0, x=0):
-        if y == 0:
-            y = self.footer.y
-        if x == 0:
-            x = self.footer.x
         if self.footer:
-            screen = self.screen
-            screen.addstr(y, x, self.footer.string)
+            self.footer.draw(y, x)
 
     def drawCursor(self):
         self.cursor.draw()
@@ -166,14 +159,17 @@ class Menu:
 
 #TEMP
 initCurses()
-header = Header("HEADER", 1, len("HEADER"), 1, 2)
-footer = Footer("FOOTER", 1, len("FOOTER"), 0, 2)
 menuItems = {"Item1":"Action1",
              "Item2":"Action2",
              "Item3":"Action3",
              "Item4":"Action4"
              }
-menu = Menu(stdscr, menuItems, header, footer, 0, 2)
+menu = Menu(stdscr, menuItems, None, None, 0, 2)
+header = Header(menu, "HEADER", 1, len("HEADER"), 1, 2)
+footer = Footer(menu, "FOOTER", 1, len("FOOTER"), 0, 2)
+menu.headerCompile(header)
+menu.footerCompile(footer)
+menu.update()
 curses.wrapper(Menu.loop(menu))
 termCurses()
 quit()
