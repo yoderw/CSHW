@@ -1,3 +1,6 @@
+# Footer needs some way to display text dynamically (see vision1.txt)
+# I am going to impliment a self.update method that will attempt to help with this
+
 class Footer:
 
     def __init__(self, menu, string="", height=0, width=0, init_y=0, init_x=0, spacer=0):
@@ -9,6 +12,9 @@ class Footer:
         self.y = self.init_y = init_y
         self.x = self.init_x = init_x
         self.spacer = spacer
+
+    def update(self):
+        pass
 
     def draw(self, y=0, x=0):
         if y == 0:

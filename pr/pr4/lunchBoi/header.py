@@ -10,6 +10,9 @@ class Header:
         self.x = self.init_x = init_x
         self.spacer = spacer
 
+    def update(self):
+        pass
+
     def draw(self, y=0, x=0):
         if y == 0:
             y = self.y

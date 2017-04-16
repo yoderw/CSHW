@@ -1,3 +1,31 @@
+4/15:
+#NOTES
+# can exec code in values using exec(value);
+# this may be useful for storing in item objects dicts
+menuItems = {
+"Item1":'''
+screen.clear()
+stdscr.addstr("Item1 Action")
+screen.refresh
+''',
+"Item2":'''
+screen.clear()
+stdscr.addstr("Item2 Action")
+screen.refresh
+''',
+"Item3":'''
+screen.clear()
+stdscr.addstr("Item3 Action")
+screen.refresh
+''',
+"Item4":'''
+screen.clear()
+stdscr.addstr("Item4 Action")
+screen.refresh
+'''
+            }
+#END
+
 4/14:
 Menu() works, aka I can move a cursor and execute code with KEY_RIGHT.
 I think I may have to augment and move Menu.loop() to some higher-order class,

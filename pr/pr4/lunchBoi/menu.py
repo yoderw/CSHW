@@ -9,23 +9,6 @@ from cursor import Cursor
 from header import Header
 from footer import Footer
 
-#TEMP
-def initCurses():
-    global stdscr
-    stdscr = curses.initscr()
-    curses.noecho()
-    curses.cbreak()
-    curses.curs_set(False)
-    stdscr.keypad(True)
-
-def termCurses():
-    curses.nocbreak()
-    stdscr.keypad(False)
-    curses.echo()
-    curses.endwin()
-    quit()
-#END
-
 class MenuItem:
     # constructs a menu item from an arbitrary object; eg. a Room or item
     def __init__(self, name, description, action=None):
@@ -39,32 +22,63 @@ class Menu:
     # a footer (complex, non-interactive string, placed below interactive portion),
     # and a init_y/init_x combo. The (y,x) combo dictates the up-left corner.
     # This is the main object used in interacting with the game.
-    def __init__(self, screen, menuItems={}, header=None, footer=None, init_y=0, init_x=0):
+    def __init__(self, screen, menuItems={}, key="", linked={}, header=None, footer=None, init_y=0, init_x=0):
         self.screen = screen
         self.menuItems = menuItems
         self.menuItemsList = [i for i in menuItems]
         self.menuItemsList.sort()
         self.depth = len(menuItems)
         self.depthIndex = self.depth - 1
+
+        # Init self.header
         if header:
             header.menu = self
             self.header = header
         else:
             self.header = Header(self)
+
+        # Init self.footer
         if footer:
             footer.menu = self
             self.footer = footer
         else:
             self.footer = Footer(self)
+
         self.init_y = init_y
         self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
         self.x = self.init_x = init_x
         self.selected = 0
-        self.cursor = Cursor(self, self.depth)
+
+        self.key = key
+        self.linked = linked
+        self.keysList = [i for i in self.linked]
+        #self.keysList.sort()
+        self.keysListOrd = [ord(i) for i in self.keysList]
+
+        # Init self.cursor
+        self.cursor = Cursor(self)
 
     def update(self):
+        self.menuItemsList = [i for i in self.menuItems]
+        self.menuItemsList.sort()
+        self.depth = len(self.menuItems)
+        self.depthIndex = self.depth - 1
+
         self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
-        self.cursor = Cursor(self, self.depth)
+        self.header.update()
+        self.footer.update()
+
+        self.keysList = [i for i in self.linked]
+        #self.keysList.sort()
+        self.keysListOrd = [ord(i) for i in self.keysList]
+
+        self.cursor = Cursor(self)
+
+    def link(self, menu):
+        self.linked[menu.key] = menu
+        menu.linked[self.key] = self
+        self.update()
+        menu.update()
 
     def menuItemsCompile(self):
         pass
@@ -73,13 +87,23 @@ class Menu:
         if type(header) is str:
             self.header = Header(self, str)
         else:
+            header.menu = self
             self.header = header
 
     def footerCompile(self, footer):
-        if type(header) is str:
+        if type(footer) is str:
             self.footer = Footer(self, str)
         else:
+            footer.menu = self
             self.footer = footer
+
+    def linkedCompile(self, keys, menus):
+        zipper = zip(keys, menus)
+        linked = {i[0]:i[1] for i in zipper}
+        self.linked = linked
+        for key in linked:
+            self.linked[key].linked[self.key] = self
+        self.keysList = [i for i in self.linked]
 
     def drawHeader(self, y=0, x=0):
         if self.header:
@@ -95,19 +119,25 @@ class Menu:
     def drawAll(self):
         screen = self.screen
         self.drawHeader()
+        # Draw menu items
         i = self.init_y_adjust
         for item in self.menuItemsList:
             screen.addstr(i, self.init_x + 2, item + "\n")
             i += 1
+        # End
         self.drawCursor()
         footer_y = self.footer.y + i
         self.drawFooter(footer_y)
 
     #TEMP
-    def drawStringSolo(self, str):
+    def drawStringSolo(self, string, y=0, x=0):
+        if y == 0:
+            y = self.init_y
+        if x == 0:
+            x = self.init_x
         screen = self.screen
         screen.clear()
-        screen.addstr(self.init_y, self.init_x, str)
+        screen.addstr(y, x, string)
         screen.refresh
     #END
 
@@ -136,68 +166,3 @@ class Menu:
             self.selected += 1
         else:
             self.selected = 0
-
-    def loop(self):
-        screen = self.screen
-        self.drawAll()
-        self.cursor.draw()
-        while True:
-            event = screen.getch()
-            if event == curses.KEY_RIGHT:
-                #curses.KEY_ENTER is not recognized
-                self.cursorSelect()
-            elif event == curses.KEY_UP:
-                self.cursorUp()
-            elif event == curses.KEY_DOWN:
-                self.cursorDown()
-            elif event == ord('q'):
-                break
-            screen.clear()
-            self.drawAll()
-            screen.refresh()
-
-
-#TEMP
-initCurses()
-menuItems = {"Item1":"Action1",
-             "Item2":"Action2",
-             "Item3":"Action3",
-             "Item4":"Action4"
-             }
-menu = Menu(stdscr, menuItems, None, None, 0, 2)
-header = Header(menu, "HEADER", 1, len("HEADER"), 1, 2)
-footer = Footer(menu, "FOOTER", 1, len("FOOTER"), 0, 2)
-menu.headerCompile(header)
-menu.footerCompile(footer)
-menu.update()
-curses.wrapper(Menu.loop(menu))
-termCurses()
-quit()
-#END
-
-#NOTES
-# can exec code in values using exec(value);
-# this may be useful for storing in item objects dicts
-menuItems = {
-"Item1":'''
-screen.clear()
-stdscr.addstr("Item1 Action")
-screen.refresh
-''',
-"Item2":'''
-screen.clear()
-stdscr.addstr("Item2 Action")
-screen.refresh
-''',
-"Item3":'''
-screen.clear()
-stdscr.addstr("Item3 Action")
-screen.refresh
-''',
-"Item4":'''
-screen.clear()
-stdscr.addstr("Item4 Action")
-screen.refresh
-'''
-            }
-#END

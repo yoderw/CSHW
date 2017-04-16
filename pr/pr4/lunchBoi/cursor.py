@@ -2,10 +2,10 @@ import curses
 
 class Cursor:
 
-    def __init__(self, menu, depth, string='>', blink=False):
+    def __init__(self, menu, string='>', blink=False):
         self.menu = menu
         self.screen = self.menu.screen
-        self.depth = depth
+        self.depth = self.menu.depth
         self.x = self.init_x = self.menu.init_x
         self.y = self.init_y = self.menu.init_y_adjust
         self.min_y = self.init_y
