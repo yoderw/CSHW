@@ -3,11 +3,12 @@ class Player:
     def __init__(self, world):
         self.world = world
         self.location = None
-        self.inventory = []
+        self.inventory = {}
         self.discovered = []
 
     def canTravel(self, r):
-        r = self.world.rooms[r]
+        if type(r) is str:
+            r = self.world.rooms[r]
         if r.name in self.location.neighbors:
             if r.locked:
                 if r.key in self.inventory:
@@ -19,12 +20,15 @@ class Player:
 
     def travel(self, r):
         if self.canTravel(r):
-            r = self.world.rooms[r]
+            if type(r) is str:
+                r = self.world.rooms[r]
             if r.locked:
-                self.inventory.remove(r.key)
+                #TEMP
+                #self.inventory.remove(r.key)
+                #END
                 r.unlock()
             self.location = r
             self.world.update()
 
-    def addItem(self, item):
-        self.inventory.append(item)
+    def invAddItem(self, item):
+        self.inventory[item.name] = item

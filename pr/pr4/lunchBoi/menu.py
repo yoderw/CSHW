@@ -8,6 +8,8 @@ import curses
 from cursor import Cursor
 from header import Header
 from footer import Footer
+from world import World, Room
+from items import Item, Key, Chest
 
 class MenuItem:
     # constructs a menu item from an arbitrary object; eg. a Room or item
@@ -17,32 +19,30 @@ class MenuItem:
         self.action = action
 
 class Menu:
+    menus = []
+
+    def updateAll():
+        for menu in Menu.menus:
+            menu.update()
+
     # Constructs an interactive menu. Takes a stdscr, a dictionary of menuItems,
     # a header (complex, non-interactive string, placed above interative portion),
     # a footer (complex, non-interactive string, placed below interactive portion),
     # and a init_y/init_x combo. The (y,x) combo dictates the up-left corner.
     # This is the main object used in interacting with the game.
-    def __init__(self, screen, menuItems={}, key="", linked={}, header=None, footer=None, init_y=0, init_x=0):
+
+    def __init__(self, screen, world, name, menuItems={}, key="", init_y=0, init_x=2):
         self.screen = screen
+        self.world = world
+        self.name = name
         self.menuItems = menuItems
         self.menuItemsList = [i for i in menuItems]
         self.menuItemsList.sort()
         self.depth = len(menuItems)
         self.depthIndex = self.depth - 1
 
-        # Init self.header
-        if header:
-            header.menu = self
-            self.header = header
-        else:
-            self.header = Header(self)
-
-        # Init self.footer
-        if footer:
-            footer.menu = self
-            self.footer = footer
-        else:
-            self.footer = Footer(self)
+        self.header = Header(self, self.name)
+        self.footer = Footer(self)
 
         self.init_y = init_y
         self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
@@ -50,35 +50,61 @@ class Menu:
         self.selected = 0
 
         self.key = key
-        self.linked = linked
+        self.linked = {}
+        self.keysList = []
+        self.keysListOrd = []
+
+        # Init self.cursor
+        self.cursor = Cursor(self)
+        Menu.menus.append(self)
+
+    def link(self, menu):
+        self.linked[menu.key] = menu
+        menu.linked[self.key] = self
         self.keysList = [i for i in self.linked]
         #self.keysList.sort()
         self.keysListOrd = [ord(i) for i in self.keysList]
 
-        # Init self.cursor
-        self.cursor = Cursor(self)
+    def updateKeys(self):
+        self.keysList = [i for i in self.linked]
+        #self.keysList.sort()
+        self.keysListOrd = [ord(i) for i in self.keysList]
 
-    def update(self):
+    def addMenuItem(self, item):
+        self.menuItems[item.name] = item.action
+
+    def removeMenuItem(self, item):
+        self.menuItems.pop(item.name)
+
+    def refreshMenuItems(self, menuItems=None):
+        if menuItems is None:
+            menuItems = self.menuItems
+        self.menuItems = menuItems
+
+    def updateMenuItems(self, dict={}):
+        if not dict:
+            self.menuItems = self.menuItems
+        else:
+            self.menuItems = dict
         self.menuItemsList = [i for i in self.menuItems]
         self.menuItemsList.sort()
         self.depth = len(self.menuItems)
         self.depthIndex = self.depth - 1
 
+    def update_y(self):
         self.y = self.init_y_adjust = self.init_y + self.header.height + self.header.y + self.header.spacer
+
+    #TEMP
+    def update(self):
+        self.updateMenuItems()
+        self.updateKeys()
+
         self.header.update()
+        self.update_y()
         self.footer.update()
 
-        self.keysList = [i for i in self.linked]
-        #self.keysList.sort()
-        self.keysListOrd = [ord(i) for i in self.keysList]
-
-        self.cursor = Cursor(self)
-
-    def link(self, menu):
-        self.linked[menu.key] = menu
-        menu.linked[self.key] = self
-        self.update()
-        menu.update()
+        self.cursor.update()
+    #END
 
     def menuItemsCompile(self):
         pass
@@ -104,7 +130,15 @@ class Menu:
         for key in linked:
             self.linked[key].linked[self.key] = self
         self.keysList = [i for i in self.linked]
-
+    '''
+    #TEMP
+    def footerRefresh(self):
+        item = self.menuItemsList[self.selected]
+        item = self.menuItems[item]
+        if type(item) is Item:
+            self.footer.updateString(item.desc)
+    #END
+    '''
     def drawHeader(self, y=0, x=0):
         if self.header:
             self.header.draw(y, x)
@@ -116,17 +150,19 @@ class Menu:
     def drawCursor(self):
         self.cursor.draw()
 
-    def drawAll(self):
+    def drawMenuItems(self):
         screen = self.screen
-        self.drawHeader()
-        # Draw menu items
         i = self.init_y_adjust
         for item in self.menuItemsList:
             screen.addstr(i, self.init_x + 2, item + "\n")
             i += 1
-        # End
+
+    def drawAll(self):
+        screen = self.screen
+        self.drawHeader()
         self.drawCursor()
-        footer_y = self.footer.y + i
+        self.drawMenuItems()
+        footer_y = self.footer.y + self.init_y_adjust + len(self.menuItemsList)
         self.drawFooter(footer_y)
 
     #TEMP
@@ -146,10 +182,25 @@ class Menu:
         screen = self.screen
         item = self.menuItemsList[self.selected]
         item = self.menuItems[item]
+        live = True
         while True:
-            self.drawStringSolo(item)
+            #self.drawStringSolo(item)
+            player = self.world.player
+            if type(item) == Room and live:
+                room = item
+                if player.canTravel(room) is True:
+                    self.drawStringSolo("You are now in room " + room.name)
+                    player.travel(room)
+                    #TEMP
+                    self.selected = 0
+                    #END
+                else:
+                    self.drawStringSolo("The door is locked.")
+                self.updateMenuItems(player.location.neighbors)
+                live = False
             event = screen.getch()
             if event == curses.KEY_LEFT:
+                self.update()
                 break
         #END
 
@@ -159,6 +210,11 @@ class Menu:
             self.selected -= 1
         else:
             self.selected = self.depthIndex
+        '''
+        #TEMP
+        self.footerRefresh()
+        #END
+        '''
 
     def cursorDown(self):
         self.cursor.moveDown()
@@ -166,3 +222,8 @@ class Menu:
             self.selected += 1
         else:
             self.selected = 0
+        '''
+        #TEMP
+        self.footerRefresh()
+        #END
+        '''

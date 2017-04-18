@@ -27,9 +27,11 @@ def loop(menu):
     menu.drawAll()
     while True:
         event = screen.getch()
+        #TEMP
         if event == curses.KEY_RIGHT:
             #curses.KEY_ENTER is not recognized???
             menu.cursorSelect()
+        #END
         elif event == curses.KEY_UP:
             menu.cursorUp()
         elif event == curses.KEY_DOWN:
@@ -45,43 +47,7 @@ def loop(menu):
         #END
         screen.clear()
         #TEMP - menu.update() is quite buggy
-        #menu.update()
+        menu.update()
         #END
         menu.drawAll()
         screen.refresh()
-
-#TEMP
-initCurses()
-
-menuItemsA = {"Item1":"Action1",
-              "Item2":"Action2",
-              "Item3":"Action3",
-              "Item4":"Action4"
-              }
-
-menuItemsB = {"ItemA":"ActionA",
-              "ItemB":"ActionB",
-              "ItemC":"ActionC",
-              "ItemD":"ActionD"
-              }
-
-menuA = Menu(stdscr, menuItemsA, 'a', {}, None, None, 0, 2)
-headerA = Header(menuA, "MENU: A", 1, len("MENU: A"), 1, 2)
-footerA = Footer(menuA, "FOOTER", 1, len("FOOTER"), 0, 2)
-menuA.headerCompile(headerA)
-menuA.footerCompile(footerA)
-
-menuB = Menu(stdscr, menuItemsB, 'b', {}, None, None, 0, 2)
-headerB = Header(menuB, "MENU: B", 1, len("MENU: B"), 1, 2)
-footerB = Footer(menuB, "FOOTER", 1, len("FOOTER"), 0, 2)
-menuB.headerCompile(headerB)
-menuB.footerCompile(footerB)
-
-menuA.update()
-menuB.update()
-menuA.link(menuB)
-
-curses.wrapper(loop(menuA))
-termCurses()
-quit()
-#END

@@ -13,6 +13,18 @@ class Cursor:
         self.string = string
         self.blink = blink
 
+    def update(self):
+        self.depth = self.menu.depth
+        self.init_x = self.menu.init_x
+        self.init_y = self.menu.init_y_adjust
+        self.min_y = self.init_y
+        self.max_y = self.init_y + (self.depth - 1)
+        if self.y < self.min_y:
+            self.y = self.min_y
+        if self.y > self.max_y:
+            self.y = self.max_y
+
+
     def draw(self):
         screen = self.screen
         if self.blink:

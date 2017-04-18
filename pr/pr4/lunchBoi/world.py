@@ -1,4 +1,5 @@
-#from player import Player
+from player import Player
+from items import Key
 
 class World:
 
@@ -39,6 +40,13 @@ class Room:
 
     def unlock(self):
         self.locked = False
+
+    def initKey(self):
+        name = self.name + " " + "Key"
+        desc = "This key opens room " + self.name
+        door = self
+        self.key = Key(name, desc, door)
+        self.lock
 
     def addNeighbors(self, neighbors):
         world = self.world

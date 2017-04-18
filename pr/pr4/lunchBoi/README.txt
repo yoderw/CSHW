@@ -1,3 +1,20 @@
+4/17:
+
+~20 points:
+
+_ 1 - "drop" command
+X 2 - Locked Doors
+_ 2 - Bigger World
+_ 2 - "me" command (Char Sheet)
+_ 3 - Player Attributes (same as above?)
+_ 2 - "inspect" command (Info display in menu)
+_ 3 - ???Command Abbreviations??? (What I've done so far???)
+_ 3 - Complex Rooms (Descriptions)
+_ ? - ???GUI???
+
+_ 2 - chests
+_ 2 - locked chests
+
 4/15:
 #NOTES
 # can exec code in values using exec(value);
