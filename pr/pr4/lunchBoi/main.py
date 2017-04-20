@@ -8,7 +8,7 @@ To Do:
     -- cursor
     -- menu draw
 '''
-import os, curses
+import curses
 from curses import wrapper
 from player import Player
 from world import Room, World
