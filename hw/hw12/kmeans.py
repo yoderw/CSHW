@@ -72,7 +72,6 @@ def normalizeCounties(counties):
             county.values[i] -= meanls[i]
             county.values[i] /= stdevls[i]
 
-
 def initClusters(counties, num):
     clusters = []
     for i in range(num):
@@ -93,14 +92,14 @@ def distance(p, q):
 
 def placeCounties(counties, clusters):
     for county in counties:
-        centroidDiff = [0 for i in range(len(clusters))]
+        centroidDistls = [0 for i in range(len(clusters))]
         for cluster in clusters:
-            i = clusters.index(cluster)
             centroid = cluster.centroid
             values = county.values
-            centroidDiff[i] = distance(values, centroid)
-        minCentroid = min(centroidDiff)
-        i = centroidDiff.index(minCentroid)
+            i = clusters.index(cluster)
+            centroidDistls[i] = distance(values, centroid)
+        minCentroid = min(centroidDistls)
+        i = centroidDistls.index(minCentroid)
         closestCluster = clusters[i]
         closestCluster.contents.append(county)
 
@@ -129,7 +128,6 @@ def kmeans(infile, outfile, k, cycles):
 #TESTING
 counties = readData("counties.txt")
 normalizeCounties(counties)
-print(counties[0].name, counties[0].values == [-1.1360914508849485, -0.09761783122525876, 0.25867007626415933, -0.8362612914682693, 0.6968800072452435, -0.4406592158742433, 0.6383515401822617, -0.2273153386303384, -0.09175952352172007, -0.01810789455986609, -0.45829273443586077, -0.07551781560439914, -0.5314595738793548,0.25284846795399535, 0.6831337952039793, -0.7296777754952319])
 clusters = initClusters(counties, 30)
 placeCounties(counties, clusters)
 print(len(clusters[0].contents), len(clusters[0].contents) == 208)
