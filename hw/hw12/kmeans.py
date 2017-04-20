@@ -41,6 +41,7 @@ def readData(filename):
                 counties.append(County(name, values))
     return counties
 
+'''
 def normalizeCounties(counties):
     meanls = [0 for i in range(16)]
     stdevls = [0 for i in range(16)]
@@ -51,6 +52,7 @@ def normalizeCounties(counties):
         for county in counties:
             county.values[i] -= meanls[i]
             county.values[i] /= stdevls[i]
+'''
 
 def normalizeCounties(counties):
     sumls = [0 for i in range(16)]
