@@ -7,6 +7,7 @@ class World:
         self.start = None
         self.player = Player(self)
         self.rooms = {}
+        self.menus = []
 
     def setStart(self, r):
         self.start = self.rooms[r]
@@ -19,9 +20,13 @@ class World:
         room.addNeighbors(n)
         self.rooms[room.name] = room
 
-    def update(self):
+    def updateRooms(self):
         for r in self.rooms:
             self.rooms[r].update()
+
+    def updateMenus(self):
+        for menu in self.menus:
+            menu.update()
 
 class Room:
 

@@ -1,6 +1,7 @@
 import math
 from math import sqrt
 from statistics import mean, pstdev, stdev, pvariance, variance
+import numpy as np
 
 class County:
     def __init__(self, name, values):
@@ -42,6 +43,8 @@ def readData(filename):
     return counties
 
 '''
+# I would prefer to use this for the sake of using built-ins,
+# but the results are slightly off (This is what I submitted to VERFY)
 def normalizeCounties(counties):
     meanls = [0 for i in range(16)]
     stdevls = [0 for i in range(16)]
@@ -80,6 +83,8 @@ def initClusters(counties, num):
         clusters.append(newcluster)
     return clusters
 
+'''
+# wrote this function using Wikipedia: "Euclidean Distance"
 def distance(p, q):
     if len(p) == len(q):
         values = [0 for i in range(len(p))]
@@ -89,7 +94,17 @@ def distance(p, q):
             values[i] = square
         sumVals = sum(values)
         return sqrt(sumVals)
+'''
 
+# This does the same as above, only faster. Stanford CS 221
+def distance(p, q):
+    if len(p) == len(q):
+        p = np.array(p)
+        q = np.array(q)
+        return np.sqrt(sum((p - q) ** 2))
+
+'''
+# This is returning 255 and 200 for the first two clusters consistently...
 def placeCounties(counties, clusters):
     for county in counties:
         centroidDistls = [0 for i in range(len(clusters))]
@@ -101,6 +116,19 @@ def placeCounties(counties, clusters):
         minCentroid = min(centroidDistls)
         i = centroidDistls.index(minCentroid)
         closestCluster = clusters[i]
+        closestCluster.contents.append(county)
+'''
+
+def placeCounties(counties, clusters):
+    for county in counties:
+        values = county.values
+        candidates = {}
+        for cluster in clusters:
+            centroid = cluster.centroid
+            dist = distance(values, centroid)
+            candidates[dist] = cluster
+        minDist = min(candidates)
+        closestCluster = candidates.pop(minDist)
         closestCluster.contents.append(county)
 
 def updateCentroids(clusters):

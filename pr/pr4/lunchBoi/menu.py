@@ -19,11 +19,6 @@ class MenuItem:
         self.action = action
 
 class Menu:
-    menus = []
-
-    def updateAll():
-        for menu in Menu.menus:
-            menu.update()
 
     # Constructs an interactive menu. Takes a stdscr, a dictionary of menuItems,
     # a header (complex, non-interactive string, placed above interative portion),
@@ -180,25 +175,31 @@ class Menu:
     def cursorSelect(self):
         #TEMP
         screen = self.screen
-        item = self.menuItemsList[self.selected]
-        item = self.menuItems[item]
+        selected = self.menuItemsList[self.selected]
+        selected = self.menuItems[selected]
         live = True
         while True:
             #self.drawStringSolo(item)
             player = self.world.player
-            if type(item) == Room and live:
-                room = item
-                if player.canTravel(room) is True:
-                    self.drawStringSolo("You are now in room " + room.name)
-                    player.travel(room)
-                    #TEMP
-                    self.selected = 0
-                    #END
-                else:
-                    self.drawStringSolo("The door is locked.")
-                self.updateMenuItems(player.location.neighbors)
-                live = False
+            if live:
+                if type(selected) == Room:
+                    room = selected
+                    if player.canTravel(room) is True:
+                        self.drawStringSolo("You are now in room " + room.name)
+                        player.travel(room)
+                        #TEMP
+                        self.selected = 0
+                        #END
+                    else:
+                        self.drawStringSolo("The door is locked.")
+                    self.updateMenuItems(player.location.neighbors)
+                    live = False
+                elif type(selected) == Item:
+                    item = selected
+                    pass
+                elif type(selected) ==
             event = screen.getch()
+            # Exit loop
             if event == curses.KEY_LEFT:
                 self.update()
                 break
