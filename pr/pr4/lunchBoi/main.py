@@ -13,7 +13,7 @@ from curses import wrapper
 from player import Player
 from world import Room, World
 from items import Item, Key
-from menu import Menu
+from menu import Menu, MapView
 from loop import loop
 
 def initCurses():
@@ -46,15 +46,17 @@ world.newRoom('B2', ['B1', 'B3'])
 world.setStart('B1')
 B3 = world.rooms['B3']
 B3.initKey()
+foo = Item("foo", "bar")
 player.invAddItem(B3.key)
+player.invAddItem(foo)
 
 mapItems = player.location.neighbors
 invItems = player.inventory
 
-mapView = Menu(stdscr, world, "Map View", mapItems, 'm')
-invView = Menu(stdscr, world, "Inventory", invItems, 'i')
+mapView = MapView(stdscr, world)
+invView = Menu(stdscr, world, 'i', invItems)
 mapView.link(invView)
-Menu.updateAll()
+world.update()
 
 wrapper(loop(mapView))
 termCurses()

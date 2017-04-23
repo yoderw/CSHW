@@ -4,6 +4,8 @@ class Header:
 
     def __init__(self, menu, string="", init_y=0, init_x=0, spacer=0):
         self.menu = menu
+        self.world = self.menu.world
+        self.player = self.world.player
         self.screen = self.menu.screen
         self.string = string
         self.height = heightHelper(self.string)
@@ -12,13 +14,13 @@ class Header:
         self.x = self.init_x = init_x
         self.spacer = spacer
 
+    def update(self):
+        self.updateString()
+
     def updateString(self, string=None):
         if string is None:
             string = self.string
         self.string = string
-
-    def update(self):
-        pass
 
     def draw(self, y=0, x=0):
         if y == 0:
@@ -28,17 +30,21 @@ class Header:
         if self.string:
             self.screen.addstr(y, x, self.string)
 
+class RoomHeader(Header):
+
+    def updateString(self):
+        location = self.player.location.name
+        self.string = "Room " + location
+        self.spacer = 2
+
 class MapHeader(Header):
 
-    def __init__(self):
-        pass
+    def updateString(self):
+        location = self.player.location.name
+        self.string = "Your Location: " + location
+        self.spacer = 1
 
 class InvHeader(Header):
 
-    def __init__(self):
-        pass
-
-class RoomHeader(Header):
-
-    def __init__(self):
-        pass
+    def updateString(self):
+        self.string = self.player.name

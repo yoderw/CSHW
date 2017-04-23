@@ -1,6 +1,9 @@
 class Player:
 
     def __init__(self, world):
+        #TEMP
+        self.name = "Paul"
+        #END
         self.world = world
         self.location = None
         self.inventory = {}

@@ -2,7 +2,7 @@ from player import Player
 from items import Key
 
 class World:
-
+    
     def __init__(self):
         self.start = None
         self.player = Player(self)
@@ -19,6 +19,10 @@ class World:
         room = Room(self, name)
         room.addNeighbors(n)
         self.rooms[room.name] = room
+
+    def update(self):
+        self.updateRooms()
+        self.updateMenus()
 
     def updateRooms(self):
         for r in self.rooms:

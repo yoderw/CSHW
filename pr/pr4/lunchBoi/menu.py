@@ -6,10 +6,23 @@ Maybe try curses.panel for stacking menus?
 '''
 import curses
 from cursor import Cursor
-from header import Header
+from header import *
 from footer import Footer
 from world import World, Room
 from items import Item, Key, Chest
+
+def initWorld():
+    global world
+    world = World()
+    player = world.player
+
+def initCurses():
+    global stdscr
+    stdscr = curses.initscr()
+    curses.noecho()
+    curses.cbreak()
+    curses.curs_set(False)
+    stdscr.keypad(True)
 
 class MenuItem:
     # constructs a menu item from an arbitrary object; eg. a Room or item
@@ -26,17 +39,17 @@ class Menu:
     # and a init_y/init_x combo. The (y,x) combo dictates the up-left corner.
     # This is the main object used in interacting with the game.
 
-    def __init__(self, screen, world, name, menuItems={}, key="", init_y=0, init_x=2):
+    def __init__(self, screen, world, key="", menuItems={}, init_y=0, init_x=2):
         self.screen = screen
         self.world = world
-        self.name = name
+        self.player = world.player
         self.menuItems = menuItems
-        self.menuItemsList = [i for i in menuItems]
-        self.menuItemsList.sort()
+        self.menuItemsls = [i for i in menuItems]
+        self.menuItemsls.sort()
         self.depth = len(menuItems)
         self.depthIndex = self.depth - 1
 
-        self.header = Header(self, self.name)
+        self.header = Header(self)
         self.footer = Footer(self)
 
         self.init_y = init_y
@@ -51,7 +64,7 @@ class Menu:
 
         # Init self.cursor
         self.cursor = Cursor(self)
-        Menu.menus.append(self)
+        self.world.menus.append(self)
 
     def link(self, menu):
         self.linked[menu.key] = menu
@@ -81,8 +94,8 @@ class Menu:
             self.menuItems = self.menuItems
         else:
             self.menuItems = dict
-        self.menuItemsList = [i for i in self.menuItems]
-        self.menuItemsList.sort()
+        self.menuItemsls = [i for i in self.menuItems]
+        self.menuItemsls.sort()
         self.depth = len(self.menuItems)
         self.depthIndex = self.depth - 1
 
@@ -128,7 +141,7 @@ class Menu:
     '''
     #TEMP
     def footerRefresh(self):
-        item = self.menuItemsList[self.selected]
+        item = self.menuItemsls[self.selected]
         item = self.menuItems[item]
         if type(item) is Item:
             self.footer.updateString(item.desc)
@@ -148,7 +161,7 @@ class Menu:
     def drawMenuItems(self):
         screen = self.screen
         i = self.init_y_adjust
-        for item in self.menuItemsList:
+        for item in self.menuItemsls:
             screen.addstr(i, self.init_x + 2, item + "\n")
             i += 1
 
@@ -157,7 +170,7 @@ class Menu:
         self.drawHeader()
         self.drawCursor()
         self.drawMenuItems()
-        footer_y = self.footer.y + self.init_y_adjust + len(self.menuItemsList)
+        footer_y = self.footer.y + self.init_y_adjust + len(self.menuItemsls)
         self.drawFooter(footer_y)
 
     #TEMP
@@ -173,37 +186,7 @@ class Menu:
     #END
 
     def cursorSelect(self):
-        #TEMP
-        screen = self.screen
-        selected = self.menuItemsList[self.selected]
-        selected = self.menuItems[selected]
-        live = True
-        while True:
-            #self.drawStringSolo(item)
-            player = self.world.player
-            if live:
-                if type(selected) == Room:
-                    room = selected
-                    if player.canTravel(room) is True:
-                        self.drawStringSolo("You are now in room " + room.name)
-                        player.travel(room)
-                        #TEMP
-                        self.selected = 0
-                        #END
-                    else:
-                        self.drawStringSolo("The door is locked.")
-                    self.updateMenuItems(player.location.neighbors)
-                    live = False
-                elif type(selected) == Item:
-                    item = selected
-                    pass
-                elif type(selected) ==
-            event = screen.getch()
-            # Exit loop
-            if event == curses.KEY_LEFT:
-                self.update()
-                break
-        #END
+        pass
 
     def cursorUp(self):
         self.cursor.moveUp()
@@ -228,3 +211,57 @@ class Menu:
         self.footerRefresh()
         #END
         '''
+
+class MapView(Menu):
+
+    def __init__(self, screen, world):
+        Menu.__init__(self, screen, world, 'm')
+        mapItems = self.player.location.neighbors
+        self.menuItems = mapItems
+        self.header = MapHeader(self)
+
+    def cursorSelect(self):
+        player = self.player
+        screen = self.screen
+        selected = self.menuItemsls[self.selected]
+        selected = self.menuItems[selected]
+        live = True
+        while True:
+            if live:
+                room = selected
+                if player.canTravel(room) == True:
+                    self.drawStringSolo("You are now in room " + room.name)
+                    player.travel(room)
+                    self.selected = 0
+                else:
+                    self.drawStringSolo("The door is locked.")
+                self.updateMenuItems(player.location.neighbors)
+                live = False
+            event = screen.getch()
+            if event == curses.KEY_LEFT:
+                self.update()
+                break
+
+class InvView(Menu):
+
+    def __init__(self, screen, world):
+        Menu.__init__(self, screen, world, 'i')
+        invItems = self.player.inventory
+        self.menuItems = invItems
+        self.header = InvHeader(self)
+
+    # Not working???
+    def cursorSelect(self):
+        player = self.player
+        screen = self.screen
+        selected = self.menuItemsls[self.selected]
+        selected = self.menuItems[selected]
+        live = True
+        while True:
+            item = selected.desc
+            self.drawStringSolo(item)
+            self.updateMenuItems(player.inventory)
+            event = screen.getch()
+            if event == curses.KEY_LEFT:
+                self.update()
+                break
