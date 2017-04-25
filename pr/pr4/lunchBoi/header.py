@@ -2,7 +2,7 @@ from stringHelpers import heightHelper, widthHelper
 
 class Header:
 
-    def __init__(self, menu, string="", init_y=0, init_x=0, spacer=0):
+    def __init__(self, menu, string="", init_y=0, init_x=2, spacer=0):
         self.menu = menu
         self.world = self.menu.world
         self.player = self.world.player
@@ -15,12 +15,7 @@ class Header:
         self.spacer = spacer
 
     def update(self):
-        self.updateString()
-
-    def updateString(self, string=None):
-        if string is None:
-            string = self.string
-        self.string = string
+        pass
 
     def draw(self, y=0, x=0):
         if y == 0:
@@ -32,19 +27,23 @@ class Header:
 
 class RoomHeader(Header):
 
-    def updateString(self):
+    def update(self):
         location = self.player.location.name
         self.string = "Room " + location
         self.spacer = 2
 
 class MapHeader(Header):
 
-    def updateString(self):
+    def update(self):
         location = self.player.location.name
         self.string = "Your Location: " + location
         self.spacer = 1
 
 class InvHeader(Header):
 
-    def updateString(self):
-        self.string = self.player.name
+    def update(self):
+        self.string = "Inventory"
+        self.spacer = 1
+
+class TitleHeader(Header):
+    pass

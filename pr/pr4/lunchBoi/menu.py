@@ -7,7 +7,7 @@ Maybe try curses.panel for stacking menus?
 import curses
 from cursor import Cursor
 from header import *
-from footer import Footer
+from footer import *
 from world import World, Room
 from items import Item, Key, Chest
 
@@ -39,7 +39,7 @@ class Menu:
     # and a init_y/init_x combo. The (y,x) combo dictates the up-left corner.
     # This is the main object used in interacting with the game.
 
-    def __init__(self, screen, world, key="", menuItems={}, init_y=0, init_x=2):
+    def __init__(self, screen, world, key="", menuItems={}, init_y=0, init_x=4):
         self.screen = screen
         self.world = world
         self.player = world.player
@@ -216,9 +216,9 @@ class MapView(Menu):
 
     def __init__(self, screen, world):
         Menu.__init__(self, screen, world, 'm')
-        mapItems = self.player.location.neighbors
-        self.menuItems = mapItems
+        self.menuItems = self.player.location.neighbors
         self.header = MapHeader(self)
+        self.footer = MapFooter(self)
 
     def cursorSelect(self):
         player = self.player
@@ -246,9 +246,9 @@ class InvView(Menu):
 
     def __init__(self, screen, world):
         Menu.__init__(self, screen, world, 'i')
-        invItems = self.player.inventory
-        self.menuItems = invItems
+        self.menuItems = self.player.inventory
         self.header = InvHeader(self)
+        self.footer = InvFooter(self)
 
     # Not working???
     def cursorSelect(self):
@@ -258,10 +258,31 @@ class InvView(Menu):
         selected = self.menuItems[selected]
         live = True
         while True:
+            #TEMP
             item = selected.desc
             self.drawStringSolo(item)
             self.updateMenuItems(player.inventory)
+            #END
             event = screen.getch()
             if event == curses.KEY_LEFT:
                 self.update()
                 break
+
+class RoomView(Menu):
+
+    def __init__(self, screen, world):
+        Menu.__init__(self, screen, world, 'r')
+        self.menuItems = self.player.location.items
+        self.header = RoomHeader(self)
+        self.footer = RoomFooter(self)
+
+    def cursorSelect(self):
+        pass
+
+class TitleView(Menu):
+
+    def __init__(self, screen, world):
+        Menu.__init__(self, screen, world, 'q')
+
+    def cursorSelect(self):
+        pass

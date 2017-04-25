@@ -7,15 +7,43 @@ class Footer(Header):
 
 class MapFooter(Footer):
 
-    def __init__(self):
-        pass
-
+    def update(self):
+        #TEMP
+        self.x = 2
+        selected = self.menu.menuItemsls[self.menu.selected]
+        selected = self.menu.menuItems[selected]
+        self.string = '''
+  [>] -- Travel to {}
+  [I] -- Inventory
+  [R] -- Room View
+  [Q] -- Quit
+        '''.format(selected.name)
+        #END
 class InvFooter(Footer):
 
-    def __init__(self):
-        pass
+    def update(self):
+        selected = self.menu.menuItemsls[self.menu.selected]
+        selected = self.menu.menuItems[selected]
+        self.string = '''
+\"{}\"
+
+  [>] -- Use: {}
+  [M] -- Map View
+  [R] -- Room View
+  [Q] -- Quit
+        '''.format(selected.desc, selected.name)
 
 class RoomFooter(Footer):
 
-    def __init__(self):
-        pass
+    def update(self):
+        selected = self.menu.menuItemsls[self.menu.selected]
+        selected = self.menu.menuItems[selected]
+        self.string = '''
+  [>] -- Interact: {}
+  [I] -- Inventory
+  [M] -- Map View
+  [Q] -- Quit
+        '''.format(selected.name)
+
+class TitleFooter(Footer):
+    pass

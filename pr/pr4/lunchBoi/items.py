@@ -1,8 +1,8 @@
 class Item:
 
-    def __init__(self, name, descr):
+    def __init__(self, name, desc):
         self.name = name
-        self.descr = descr
+        self.desc = desc
         self.perishable = False
         self.action = None
 
